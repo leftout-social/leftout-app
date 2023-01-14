@@ -9,5 +9,7 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({ name: 'John Doe' })
+  fetch('https://jsonplaceholder.typicode.com/todos').then((resp) => resp.json()).then((data) => {
+    res.status(200).json(data)
+  }).catch((e) => res.status(500).json(e))
 }
