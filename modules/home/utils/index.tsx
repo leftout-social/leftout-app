@@ -52,7 +52,7 @@ export const DummyFeedList: DUMMY_ENTITY[] = [
     },
     {
         id: 'h2y45ybkjn',
-        name: 'Kishan Somani',
+        name: 'Kishan Kumar',
         goingTo: 'Leh',
         goingOnDate: '02-02-2023',
         travelMedium: 'Motorcycle',
@@ -94,8 +94,8 @@ export const DummyFeedList: DUMMY_ENTITY[] = [
 
 export const tagBackgroundFinder = (tag: DUMMY_ENTITY['tag']) => {
     let list = {
-        'BEACH': '/cardImage/beach-1.webp',
-        'MOUNTAIN': '/cardImage/mountain-1.jpg'
+        'BEACH': 'linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%)',
+        'MOUNTAIN': 'linear-gradient(90deg, #1CB5E0 0%, #000851 100%)'
     }
     return list[tag]
 }

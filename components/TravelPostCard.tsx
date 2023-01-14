@@ -15,9 +15,13 @@ const TravelPostCard = ({id, name, goingTo, travelMedium, goingOnDate, intereste
     tag
                         }: TravelPostCardProps) => {
     const getTagBackground = tagBackgroundFinder(tag)
+    console.log(getTagBackground)
     return (
-        <TravelPostContainer backgroundImage={getTagBackground}>
-            <Name>{name}</Name>
+        <TravelPostContainer backgroundImage={getTagBackground} tags={tag}>
+            <div className='header'>
+                <Name>{name}</Name>
+                <img src={`/cardImage/${tag.toLowerCase()}-1.jpg`} height='40' width='40' alt='icon' style={{borderRadius: '5px'}}/>
+            </div>
             <span>Trip to : {goingTo}</span>
             <span>Trip date : {goingOnDate}</span>
             <span>Trip medium : {travelMedium}</span>
@@ -27,7 +31,7 @@ const TravelPostCard = ({id, name, goingTo, travelMedium, goingOnDate, intereste
 }
 export default TravelPostCard;
 
-const TravelPostContainer = styled.div<{backgroundImage: string}>`
+const TravelPostContainer = styled.div<{backgroundImage: string, tags: 'MOUNTAIN' | 'BEACH'}>`
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -36,10 +40,12 @@ const TravelPostContainer = styled.div<{backgroundImage: string}>`
   box-shadow: #42C2FF 0px 2px 8px 0px;
   background: #ffffff;
   border-radius: 1rem;
-  ::before {
-    background: url(${(props) => props.backgroundImage}) no-repeat;
-    background-size: 100%;
-    opacity: 0.75;
+  background: ${(props) => props.backgroundImage};
+  color: ${(props) => props.tags === 'BEACH' ? '#000000' : '#ffffff'};
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 `;
 
