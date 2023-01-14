@@ -1,7 +1,17 @@
 import styled from "styled-components";
+import {useEffect, useContext} from 'react';
+import { useRouter } from "next/router";
 import LoginForm from "~/modules/login/components/LoginForm";
+import InitalDataContext from "~/context/inital-data-context";
 
 const Login = () => {
+  const router = useRouter();
+  const {userData} = useContext(InitalDataContext);
+
+  useEffect (() => {
+    if(userData.first_name) router.push('/');
+  }, []);
+
     return (
         <Parent>
             <LoginContainer>
