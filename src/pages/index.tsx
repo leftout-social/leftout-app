@@ -5,12 +5,10 @@ import { DummyFeedList } from '~/modules/home/utils';
 import { Fragment, useState } from 'react';
 import TravelPostCard from '~/components/TravelPostCard';
 import AddIcon from '@mui/icons-material/Add';
-import {useRouter}  from "next/router";
 import { BottomDrawer } from '~/components/BottomDrawer';
 import CreatePost from '~/modules/home/components/CreatePost';
 
 export default function Home() {
-  const router = useRouter();
   const [openBottomDrawer, setOpenBottomDrawer] = useState<boolean>(false);
 
 	return (
@@ -28,7 +26,7 @@ export default function Home() {
 				<div className='scroll-container'>
 					{DummyFeedList.map((item) => (
 						<Fragment key={item.id}>
-							<TravelPostCard {...item} />
+							<TravelPostCard {...item} self={false}/>
 						</Fragment>
 					))}
 				</div>
