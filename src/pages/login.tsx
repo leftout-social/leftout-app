@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useEffect, useContext } from 'react';
-import useRouter from 'next/router';
+import {useRouter} from 'next/router';
 import LoginForm from '~/modules/login/components/LoginForm';
 import InitalDataContext from '~/context/initial-data-context';
 

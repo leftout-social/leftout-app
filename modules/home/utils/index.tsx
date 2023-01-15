@@ -38,6 +38,8 @@ export type DUMMY_ENTITY = {
     description: string
     interested: string[]
     tag: 'BEACH' | 'MOUNTAIN'
+    tripStartDate?: string;
+    tripEndDate?: string;
 }
 export const DummyFeedList: DUMMY_ENTITY[] = [
     {
@@ -49,6 +51,8 @@ export const DummyFeedList: DUMMY_ENTITY[] = [
         description: 'jkadfjkbkabdfkabdfs',
         interested: [],
         tag: 'MOUNTAIN',
+        tripStartDate: 'Jan 03 2023',
+        tripEndDate: 'Jan 15 2023'
     },
     {
         id: 'h2y45ybkjn',
@@ -59,6 +63,8 @@ export const DummyFeedList: DUMMY_ENTITY[] = [
         description: 'jkadfjkbkabdfkabdfs',
         interested: [],
         tag: 'MOUNTAIN',
+        tripStartDate: 'Jan 03 2023',
+        tripEndDate: 'Jan 15 2023'
     },
     {
         id:'nswh78234bjfn98n',
@@ -69,6 +75,8 @@ export const DummyFeedList: DUMMY_ENTITY[] = [
         description: 'jkadfjkbkabdfkabdfs',
         interested: [],
         tag: 'BEACH',
+        tripStartDate: 'Jan 15 2023',
+        tripEndDate: 'Jan 15 2023'
     },
     {
         id: '3brkquytb13',
@@ -79,6 +87,8 @@ export const DummyFeedList: DUMMY_ENTITY[] = [
         description: 'jkadfjkbkabdfkabdfs',
         interested: [],
         tag: 'BEACH',
+        tripStartDate: 'Jan 15 2023',
+        tripEndDate: 'Jan 15 2023'
     },
     {
         id: 'ngh235ubk',
@@ -89,13 +99,15 @@ export const DummyFeedList: DUMMY_ENTITY[] = [
         description: 'jkadfjkbkabdfkabdfs',
         interested: [],
         tag: 'MOUNTAIN',
+        tripStartDate: 'Jan 15 2023',
+        tripEndDate: 'Mar 15 2023'
     }
 ]
 
 export const tagBackgroundFinder = (tag: DUMMY_ENTITY['tag']) => {
     let list = {
         'BEACH': 'linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%)',
-        'MOUNTAIN': 'linear-gradient(90deg, #1CB5E0 0%, #000851 100%)'
+        'MOUNTAIN': 'linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)'
     }
     return list[tag]
 }

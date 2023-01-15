@@ -1,5 +1,8 @@
 import styled from "styled-components";
 import {User} from "@nextui-org/react";
+import {DummyFeedList} from "~/modules/home/utils";
+import {Fragment} from "react";
+import TravelPostCard from "~/components/TravelPostCard";
 interface ProfileComponentProps {
     firstName: string;
     lastName: string;
@@ -24,24 +27,13 @@ const ProfileComponent = ({firstName, lastName, age, gender, currentCity}: Profi
             </Card>
             <Divider />
             <span className='recent-posts-heading'>Recent Travel Posts</span>
-            <Card>
-                <span><b>Name :</b> {firstName + ' ' + lastName}</span>
-                <span><b>Age :</b> {age}</span>
-                <span><b>Gender : </b>{gender}</span>
-                <span><b>Currently located at :</b> {currentCity}</span>
-            </Card>
-            <Card>
-                <span><b>Name :</b> {firstName + ' ' + lastName}</span>
-                <span><b>Age :</b> {age}</span>
-                <span><b>Gender : </b>{gender}</span>
-                <span><b>Currently located at :</b> {currentCity}</span>
-            </Card>
-            <Card>
-                <span><b>Name :</b> {firstName + ' ' + lastName}</span>
-                <span><b>Age :</b> {age}</span>
-                <span><b>Gender : </b>{gender}</span>
-                <span><b>Currently located at :</b> {currentCity}</span>
-            </Card>
+            <div className='scroll-container'>
+                {DummyFeedList.map((item) => (
+                    <Fragment key={item.id}>
+                        <TravelPostCard {...item} self={true}/>
+                    </Fragment>
+                ))}
+            </div>
         </ProfileContainer>
     )
 }
@@ -68,6 +60,12 @@ const ProfileContainer = styled.div`
     font-weight: bold;
     text-align: left;
     width: 100%;
+  }
+  .scroll-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 0 2rem 2rem 2rem;
   }
 `;
 
