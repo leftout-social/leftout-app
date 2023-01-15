@@ -12,7 +12,11 @@ import DateRangePicker from '~/components/DateRangePicker';
 import useRouter from 'next/router';
 import { Textarea } from '@nextui-org/react';
 
-const createPost = () => {
+interface createPostProps {
+	closeDrawer: () => void;
+}
+
+const CreatePost = ({ closeDrawer }: createPostProps) => {
 	const router = useRouter;
 	const [formState, setFormState] = useState({
 		fromDate: '',
@@ -27,50 +31,9 @@ const createPost = () => {
 
 	return (
 		<Parent>
-			{/* <Box
-				component='form'
-				sx={{
-					'& .MuiTextField-root': { m: 1, width: '25ch' },
-				}}
-				noValidate
-				autoComplete='off'
-				className='form'
-			>
-				<TextField
-					required
-					id='outlined-required'
-					label='Location'
-					// defaultValue="Goa"
-					value={formState.location}
-					onChange={(event) =>
-						setFormState({ ...formState, location: event.target.value })
-					}
-					className='text-field'
-				/>
-
-                <div>
-                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                <InputLabel id='demo-simple-select-label'>Group Size</InputLabel>
-				<Select
-					// labelId='demo-simple-select-label'
-					id='demo-simple-select'
-					value={formState.groupSize}
-					label='Group Size'
-                    className='group-size'
-					onChange={(event) => setFormState({...formState, groupSize: Number(event.target.value)})}
-				>
-                    {size.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
-                    ))}
-				</Select>
-                </FormControl>
-                </div>
-				
-			</Box> */}
-
 			<NavBarContainer>
-				<CloseIcon fontSize='medium' onClick={() => router.push('/')} />
-				<Button size='sm' color='primary' rounded css={{ width: '$5' }}>
+				<CloseIcon fontSize='medium' onClick={closeDrawer} />
+				<Button size='xs' color='primary' rounded>
 					Post
 				</Button>
 			</NavBarContainer>
@@ -106,33 +69,9 @@ const createPost = () => {
 				type='number'
 			/>
 
-			{/* <Input
-				value={formState.desc}
-				clearable
-				status='primary'
-				onChange={(event) =>
-					setFormState({ ...formState, desc: event.target.value })
-				}
-				label='Description'
-				// className='text-field'
-				// maxLength={100}
-				css={{
-					fontSize: '$xl',
-					height: '100%',
-					width: '100%',
-					minHeight: '40px',
-					display: 'flex',
-					flexWrap: 'wrap',
-					flexGrow: '1',
-				}}
-			/> */}
+			<Textarea label='Description' status='primary' css={{ color: 'black' }} />
 
-			<Textarea
-				label='Write your thoughts'
-				placeholder='Enter your amazing ideas.'
-			/>
-
-			<p>Commute</p>
+			<p className='commute'>Commute</p>
 			<Dropdown>
 				<Dropdown.Button flat>{formState.commute}</Dropdown.Button>
 				<Dropdown.Menu aria-label='Static Actions'>
@@ -145,7 +84,7 @@ const createPost = () => {
 	);
 };
 
-export default createPost;
+export default CreatePost;
 
 const Parent = styled.div`
 	display: flex;
@@ -169,6 +108,11 @@ const Parent = styled.div`
 		}
 	}
 	transition: transform 1s ease;
+	.commute {
+		color: #0073f4;
+		margin: -10px 0 -30px;
+		font-size: 15px;
+	}
 `;
 
 const NavBarContainer = styled.div`

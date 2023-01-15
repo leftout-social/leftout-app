@@ -2,13 +2,16 @@ import Head from 'next/head';
 import Tabs from '~/modules/home/components/Tabs';
 import styled from 'styled-components';
 import { DummyFeedList } from '~/modules/home/utils';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import TravelPostCard from '~/components/TravelPostCard';
 import AddIcon from '@mui/icons-material/Add';
-import useRouter  from "next/router";
+import {useRouter}  from "next/router";
+import { BottomDrawer } from '~/components/BottomDrawer';
+import CreatePost from '~/modules/home/components/CreatePost';
 
 export default function Home() {
-  const router = useRouter;
+  const router = useRouter();
+  const [openBottomDrawer, setOpenBottomDrawer] = useState<boolean>(false);
 
 	return (
 		<>
@@ -29,9 +32,12 @@ export default function Home() {
 						</Fragment>
 					))}
 				</div>
-        <div className='add' onClick={() => router.push('/createPost')}>
+        <div className='add' onClick={() => setOpenBottomDrawer(true)}>
             <AddIcon />
         </div>
+        <BottomDrawer id='post-drawer' open={openBottomDrawer}>
+            <CreatePost closeDrawer={() => setOpenBottomDrawer(false)}/>
+        </BottomDrawer>
 			</Parent>
 		</>
 	);
