@@ -37,12 +37,12 @@ const LoginForm = () => {
 				router.push('/');
 			}
 			console.log(response.data.data.user);
-		} catch (e) {
-			console.log(e);
+		} catch (error: any) {
+			console.log(error);
 			// @ts-ignore
 			globalData.toast.toastHandler({
 				type: 'error',
-				message: e.response.data.error.message,
+				message: error.response.data.error.message || '',
 				open: true,
 			});
 		}

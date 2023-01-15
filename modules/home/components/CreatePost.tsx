@@ -1,15 +1,8 @@
 import styled from 'styled-components';
-import Box from '@mui/material/Box';
-import { FormControl, TextField } from '@mui/material';
 import { Button, Input, Dropdown } from '@nextui-org/react';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
 import { useState } from 'react';
-import Select from '@mui/material/Select';
-import { css } from '@nextui-org/react';
 import CloseIcon from '@mui/icons-material/Close';
 import DateRangePicker from '~/components/DateRangePicker';
-import useRouter from 'next/router';
 import { Textarea } from '@nextui-org/react';
 
 interface createPostProps {
@@ -17,7 +10,6 @@ interface createPostProps {
 }
 
 const CreatePost = ({ closeDrawer }: createPostProps) => {
-	const router = useRouter;
 	const [formState, setFormState] = useState({
 		fromDate: '',
 		toDate: '',
@@ -26,7 +18,7 @@ const CreatePost = ({ closeDrawer }: createPostProps) => {
 		desc: '',
 		commute: 'flight',
 	});
-	const size = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+	// const size = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 	const commuteTypes = ['flight', 'train', 'bus', 'car', 'bike'];
 
 	return (
