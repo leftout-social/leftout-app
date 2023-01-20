@@ -1,4 +1,5 @@
 import axios from "axios";
+
 const _apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 let token;
@@ -40,8 +41,7 @@ export const onboard = async(data: any, id: any) => {
 }
 
 export const getUserDetail = async(id: any) => {
-    const response = await $axios.get(`${_apiBaseUrl}/user/detail/${id}`)
-    return response.data
+    return await $axios.get(`${_apiBaseUrl}/user/detail/${id}`);
 }
 export const forgotPasswordWithEmail = async(email: any) => {
     const response = await axios.post(`${_apiBaseUrl}/forgot`, {
