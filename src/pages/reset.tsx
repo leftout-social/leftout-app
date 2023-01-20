@@ -4,7 +4,6 @@ import {BottomDrawer} from "~/components/BottomDrawer";
 import {useContext, useEffect, useRef, useState} from "react";
 import {Input, Button} from '@nextui-org/react';
 import InitalDataContext from "~/context/initial-data-context";
-import axios from "axios";
 import {useRouter} from "next/router";
 import {resetPassword} from "~/services/auth-service";
 
