@@ -36,10 +36,21 @@ export const onboard = async(data: any, id: any) => {
         current_location: data.currentCity,
         id: id
     })
-    return response.data.data
+    return response.data
 }
 
 export const getUserDetail = async(id: any) => {
     const response = await $axios.get(`${_apiBaseUrl}/user/detail/${id}`)
-    return response.data.data
+    return response.data
+}
+export const forgotPasswordWithEmail = async(email: any) => {
+    const response = await axios.post(`${_apiBaseUrl}/forgot`, {
+        email_id: email
+    })
+    return response.data;
+}
+
+export const resetPassword = async(data: any) => {
+    const response = await axios.post(`${_apiBaseUrl}/reset/password`, data)
+    return response.data;
 }

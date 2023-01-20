@@ -8,9 +8,9 @@ import InitalDataContext from '~/context/initial-data-context';
 const Profile = () => {
 	const router = useRouter();
 	const { userData } = useContext(InitalDataContext);
-	const logout = () => {
+	const logout = async() => {
 		localStorage.clear();
-		router.replace('/login');
+		await router.replace('/login');
 	};
 	return (
 		<Parent>

@@ -14,6 +14,7 @@ const Login = () => {
 
 	return (
 		<Parent>
+			<LoginImage />
 			<LoginContainer>
 				<LoginForm />
 			</LoginContainer>
@@ -25,10 +26,6 @@ export default Login;
 const Parent = styled.div`
 	height: 100%;
 	width: 100%;
-	background: #42c2ff;
-	position: relative;
-	background: url('/images/cover-login.jpg');
-	background-size: 100% 100%;
 	//.title {
 	//  position: absolute;
 	//  top: 50%;
@@ -44,16 +41,19 @@ const Parent = styled.div`
 	//  }
 	//}
 `;
+const LoginImage = styled.div`
+	height: 320px;
+	width: 100%;
+	background: url('/images/cover-onboarding-1.jpg');
+	background-size: 100% 100%;
+	
+`;
 const LoginContainer = styled.div`
-	height: 400px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 80%;
-	max-width: 700px;
-	padding: 2rem;
-	box-shadow: #42c2ff 0px 2px 8px 0px;
-	background: #ffffff;
-	border-radius: 1rem;
+	width: 100%;
+	background: #FFFFFF;
+	border-radius: 28px 28px 0 0;
+	position: relative;
+	top: -1.5rem;
+	display: flex;
+	padding: 40px 30px;
 `;

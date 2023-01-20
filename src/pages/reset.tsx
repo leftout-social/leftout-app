@@ -5,8 +5,11 @@ import {useContext, useEffect, useRef, useState} from "react";
 import {Input, Button} from '@nextui-org/react';
 import InitalDataContext from "~/context/initial-data-context";
 import axios from "axios";
+import {useRouter} from "next/router";
+import {resetPassword} from "~/services/auth-service";
+
 const Reset = (props: any) => {
-    // const router = useRouter();
+    const router = useRouter();
     const {toast} = useContext(InitalDataContext)
     const [formState, setFormState] = useState({
         email_id: '',
@@ -20,10 +23,12 @@ const Reset = (props: any) => {
         emailAndTempPassword.current = (temp as string)?.split('-') as []
     }, [temp !== undefined])
     const onSubmit = async () => {
-        if(formState.new_password !== formState.confirm_password) toast.toastHandler({type: 'error', open: true, message: 'password and verify password does not matches'});
+        if(formState.new_password !== formState.confirm_password) return toast.toastHandler({type: 'error', open: true, message: 'password and verify password does not matches'});
         try {
-            const response = await axios.post('http://localhost:1212/reset/password', formState)
-            console.log(response.data)
+            const response = await resetPassword(formState)
+            console.log(response)
+            toast.toastHandler({type: 'info', open: true, message: 'password updated successfully'});
+            await router.push('/login')
         }
         catch (error){
             console.log(error)
