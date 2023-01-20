@@ -4,20 +4,17 @@ import { Input } from '@nextui-org/react';
 import { IconButton } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { dynamicTitle } from '~/modules/onboarding/util';
-import axios from 'axios';
 import InitalDataContext from '~/context/initial-data-context';
 import { useRouter } from 'next/router';
+import {onboard} from "~/services/auth-service";
 
 const OnboardingForm = () => {
-	const data = localStorage.getItem('user');
 	const router = useRouter();
-	const parseData = JSON.parse(data!);
-	const { id } = parseData;
 	const { toast } = useContext(InitalDataContext);
+	const {id} = router.query;
 	const [formState, setFormState] = useState({
 		firstName: '',
 		lastName: '',
-		id: id,
 		gender: '',
 		age: '',
 		currentCity: '',
@@ -27,15 +24,8 @@ const OnboardingForm = () => {
 		setStep(step + 1);
 		if (step == 3) {
 			try {
-				await axios.post('/api/onboard', {
-					first_name: formState.firstName,
-					last_name: formState.lastName,
-					age: formState.age,
-					gender: formState.gender,
-					current_city: formState.currentCity,
-					id: id,
-				});
-				router.push('/');
+				await onboard(formState, id)
+				await router.push('/');
 			} catch (e) {
 				// @ts-ignore
 				toast.toastHandler({

@@ -3,9 +3,9 @@ import '../styles/globals.css';
 import { useEffect, useState } from 'react';
 import Toast, { ToastDefaultValue, ToastItem } from '~/components/Toast';
 import InitalDataContext, { GlobalData } from '~/context/initial-data-context';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import useDeviceWidth from '~/hooks/use-device-width';
+import {getUserDetail} from "~/services/auth-service";
 export default function App({ Component, pageProps }: AppProps) {
 	// @ts-ignore
 	const { height, width } = useDeviceWidth();
@@ -23,12 +23,11 @@ export default function App({ Component, pageProps }: AppProps) {
 	});
 	const fetchUserDetails = async () => {
 		try {
-			const localData = localStorage.getItem('user');
-			if (localData) {
-				const parsedata = JSON.parse(localData!);
-				const response = await axios.get(`/api/get-user?id=${parsedata?.id}`);
-				setInitialData({ ...initalData, userData: response.data[0] });
-			} else router.push('/login');
+			const id = localStorage.getItem('leftout-id');
+			if (id) {
+				const response = await getUserDetail(id)
+				setInitialData({ ...initalData, userData: response.data.data });
+			} else if(router.pathname !== '/reset' ) await router.push('/login');
 		} catch (e) {
 			console.error({ e });
 		}

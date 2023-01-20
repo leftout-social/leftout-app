@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "env-cmd -f .env/.env.local next dev -p 3880",
+    "build:prod": "env-cmd -f .env/.env.production next build",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -23,6 +24,7 @@
     "@types/react-dom": "18.0.10",
     "axios": "^1.2.2",
     "dayjs": "^1.11.7",
+    "env-cmd": "^10.1.0",
     "eslint": "8.31.0",
     "eslint-config-next": "13.1.2",
     "eslint-plugin-prettier": "^4.2.1",
