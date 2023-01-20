@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import {useContext, useState} from 'react';
 import styled from 'styled-components';
 import { Button, Loading, Input } from '@nextui-org/react';
 import { useRouter } from 'next/router';
-import {login, signup} from "~/services/auth-service";
-
+import {forgotPasswordWithEmail, login, signup} from "~/services/auth-service";
+import InitalDataContext from "~/context/initial-data-context";
+import {BottomDrawer} from "~/components/BottomDrawer";
 const LoginForm = () => {
 	const router = useRouter();
 	const [formState, setFormState] = useState({ email: '', password: '' });
-	// const globalData = useContext(InitalDataContext);
+	const {toast} = useContext(InitalDataContext);
 	const [loginState, setLoginState] = useState<'LOGIN' | 'SIGN_UP'>('LOGIN');
 	const [loading, setLoading] = useState<boolean>(false);
+	const [forgotDrawer, setForgotDrawer] = useState<boolean>(false);
+	const [forgotLoading,setForgotLoading] = useState<boolean>(false)
 	const onSubmit = async () => {
 		setLoading(true);
 		if(loginState === 'LOGIN') {
@@ -22,54 +25,43 @@ const LoginForm = () => {
 			}
 			catch (e){
 				console.error(e)
+				// @ts-ignore
+				toast.toastHandler({type: 'error', message: e.message || 'Something went wrong', open: true})
 			}
 		}
 		else {
 			try {
-				const response = await signup(formState)
-				console.log(response)
+				await signup(formState)
+				toast.toastHandler({type: 'info', message: 'successfully signed up, now you can login', open: true})
+				setLoginState('LOGIN');
 			}
 			catch (e){
 				console.error(e)
+				// @ts-ignore
+				toast.toastHandler({type: 'error', message: e.message || 'Something went wrong', open: true})
 			}
 		}
-		// try {
-		// 	const response = await axios.post('/api/login', {
-		// 		email: formState.email,
-		// 		password: formState.password,
-		// 		state: loginState,
-		// 	});
-		// 	if (response.data.state === 'SIGN_UP') {
-		// 		globalData.toast.toastHandler({
-		// 			type: 'info',
-		// 			message: 'verification has been sent your email, please verify it',
-		// 			open: true,
-		// 		});
-		// 	} else {
-		// 		localStorage.setItem('user', JSON.stringify(response.data.data.user));
-		// 		const userData = await axios.get(
-		// 			`/api/get-user?id=${response.data.data.user.id}`
-		// 		);
-		// 		console.log(userData);
-		// 		if (userData?.data.length > 0) {
-		// 			router.push('/');
-		// 		} else router.push('/onboarding');
-		// 		router.push('/');
-		// 	}
-		// 	console.log(response.data.data.user);
-		// } catch (error: any) {
-		// 	console.log(error);
-		// 	// @ts-ignore
-		// 	globalData.toast.toastHandler({
-		// 		type: 'error',
-		// 		message: error.response.data.error.message || '',
-		// 		open: true,
-		// 	});
 		setLoading(false);
 	};
 	const disabled = formState.email.length < 5 || formState.password.length < 6;
+	const onForgotClicked = () => setForgotDrawer(true);
+	const forgotDisabled = formState.email.length < 5;
+	const forgotPassword = async() => {
+		setForgotLoading(true)
+		try {
+			await forgotPasswordWithEmail(formState.email);
+			setForgotDrawer(false);
+			setFormState({email: '', password: ''})
+			toast.toastHandler({type: 'info', message: 'reset link sent to your email', open: true})
+		}
+		catch (error){
+			// @ts-ignore
+			toast.toastHandler({type: 'error', message: e.message || 'Something went wrong', open: true})
+		}
+		setForgotLoading(false)
+	}
 	return (
-		<ParentContainer>
+		<ParentContainer blur={forgotDrawer}>
 			<Input
 				value={formState.email}
 				placeholder='email'
@@ -86,36 +78,66 @@ const LoginForm = () => {
 					setFormState({ ...formState, password: event.target.value })
 				}
 				className='input'
+				type='password'
 			/>
+			<br />
+			<span className='forgot' onClick={onForgotClicked}>FORGOT PASSWORD</span>
+			<br />
 			{!loading && (
-				<Button onClick={onSubmit} className='button' disabled={disabled}>
-					{loginState === 'LOGIN' ? 'Login' : 'Sign up'}
+				<Button onClick={onSubmit} className='button' disabled={disabled} >
+					{loginState === 'LOGIN' ? 'LOGIN' : 'SIGN UP'}
 				</Button>
 			)}
 			{loading && <Loading />}
+			<br />
 			{loginState === 'LOGIN' && (
 				<StateWording>
-					New user?{' '}
-					<span onClick={() => setLoginState('SIGN_UP')}> Sign up</span>
+					Don't have an account?
+					<span onClick={() => setLoginState('SIGN_UP')}> SIGN UP</span>
 				</StateWording>
 			)}
 			{loginState === 'SIGN_UP' && (
 				<StateWording>
-					Existing user?{' '}
-					<span onClick={() => setLoginState('LOGIN')}> Login</span>
+					Already have an account?
+					<span onClick={() => setLoginState('LOGIN')}> LOGIN</span>
 				</StateWording>
 			)}
+			<div className='company-promotion'>
+				<span>Made with &#128156; in India</span>
+			</div>
+			<BottomDrawer id='forgot-drawer' open={forgotDrawer} onClose={() => {
+				setForgotDrawer(false);
+				setFormState({email: '', password: ''});
+			}}>
+				<DrawerParent>
+					<Input
+						value={formState.email}
+						placeholder='email'
+						onChange={(event) =>
+							setFormState({ ...formState, email: event.target.value })
+						}
+						className='input'
+						size='lg'
+					/>
+					{!forgotLoading && <Button onClick={forgotPassword} className='button' disabled={forgotDisabled}>
+						SUBMIT
+					</Button>}
+					{forgotLoading && <Loading />}
+				</DrawerParent>
+			</BottomDrawer>
 		</ParentContainer>
 	);
 };
 export default LoginForm;
 
-const ParentContainer = styled.div`
+const ParentContainer = styled.div<{blur: boolean}>`
+	height: 100%;
 	display: flex;
 	flex-direction: column;
-	height: 100%;
+	width: 100%;
 	justify-content: center;
 	gap: 1rem;
+	filter: ${(props) => props.blur && 'blur(10px)'};
 	.input {
 		height: 60px;
 		font-size: 20px;
@@ -123,17 +145,70 @@ const ParentContainer = styled.div`
 		padding: 6px;
 	}
 	.button {
-		background: #42c2ff;
+		height: 52px;
+		background: linear-gradient(270.95deg, #888BF4 0%, #5151C6 100%);
+		border-radius: 30px;
+		color: #FFFFFF;
 	}
 	.progress {
 		color: #42c2ff;
+	}
+	.forgot {
+		font-family: 'Circular Std',serif;
+		font-style: normal;
+		font-weight: 400;
+		font-size: 14px;
+		line-height: 120%;
+		text-align: center;
+		letter-spacing: 2px;
+		text-transform: uppercase;
+		color: #5252C7;
+
+	}
+	.company-promotion {
+		position: fixed;
+		bottom: 2rem;
+		display: flex;
+		justify-content: center;
+		width: 90%;
+		span {
+			font-family: 'Circular Std', serif;
+			font-style: normal;
+			font-weight: 400;
+			font-size: 14px;
+			line-height: 120%;
+			text-align: center;
+			letter-spacing: 2px;
+			text-transform: uppercase;
+			color: #000000;
+		}
 	}
 `;
 const StateWording = styled.div`
 	display: flex;
 	gap: 5px;
+	font-family: 'Circular Std';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 150%;
+	justify-content: center;
+	letter-spacing: -0.2px;
+	color: #606060;
 	span {
-		text-decoration: underline;
 		cursor: pointer;
+		color: #5252C7;
 	}
+`;
+const DrawerParent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  height: 50%;
+  .input {
+    height: 60px;
+    font-size: 18px;
+  }
+  
 `;
