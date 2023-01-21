@@ -10,6 +10,9 @@ import Loading from "~/components/Loading";
 import styled from "styled-components";
 import Cookies from "js-cookie";
 import {requestInterceptor, responseInterceptor} from "~/config/axios";
+import BottomNavbar from "~/modules/nav/components/BottomNavbar";
+import {BottomDrawer} from "~/components/BottomDrawer";
+import CreatePost from "~/modules/home/components/CreatePost";
 
 export default function App({ Component, pageProps }: AppProps) {
 	// @ts-ignore
@@ -28,6 +31,7 @@ export default function App({ Component, pageProps }: AppProps) {
 		open: false,
 		message: '',
 	});
+	const [openBottomDrawer, setOpenBottomDrawer] = useState<boolean>(false);
 	const fetchUserDetails = async () => {
 		setLoading(true)
 		try {
@@ -57,18 +61,32 @@ export default function App({ Component, pageProps }: AppProps) {
 			toastHandler,
 		},
 	};
+	const openNewPostDrawer = () => setOpenBottomDrawer(true);
 	return (
 		<InitalDataContext.Provider value={initalDataValue}>
 			{loading && <Loading />}
-			{!loading && <Container><Wrapper><Component {...pageProps} /></Wrapper></Container>}
+			{!loading && <Container>
+				<Wrapper>
+					<Component {...pageProps} />
+					<NavContainer>
+						<BottomNavbar openNewPostDrawer={openNewPostDrawer}/>
+					</NavContainer>
+					<BottomDrawer id='post-drawer' open={openBottomDrawer}>
+					    <CreatePost closeDrawer={() => {
+							setOpenBottomDrawer(false);
+						}}/>
+					</BottomDrawer>
+				</Wrapper>
+
+			</Container>}
 			<Toast></Toast>
 		</InitalDataContext.Provider>
 	);
 }
 
 const Container = styled.div`
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
 	background:#F1F1FE;
 `;
 
@@ -78,4 +96,11 @@ const Wrapper = styled.div`
 	max-width: 900px;
 	margin: 0 auto;
 	background: #ffffff;
+`;
+const NavContainer = styled.div`
+  width: inherit;
+  position: fixed;
+	max-width: 900px;
+  bottom: 0;
+  z-index: 3;
 `;
