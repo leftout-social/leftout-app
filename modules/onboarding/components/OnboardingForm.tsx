@@ -6,12 +6,13 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { dynamicTitle } from '~/modules/onboarding/util';
 import InitalDataContext from '~/context/initial-data-context';
 import { useRouter } from 'next/router';
-import {onboard} from "~/services/auth-service";
+import { onboard } from '~/services/auth-service';
+import Loader from '~/components/Loader';
 
 const OnboardingForm = () => {
 	const router = useRouter();
 	const { toast } = useContext(InitalDataContext);
-	const {id} = router.query;
+	const { id } = router.query;
 	const [formState, setFormState] = useState({
 		firstName: '',
 		lastName: '',
@@ -24,13 +25,13 @@ const OnboardingForm = () => {
 		setStep(step + 1);
 		if (step == 3) {
 			try {
-				await onboard(formState, id)
+				await onboard(formState, id);
 				await router.push('/');
 			} catch (e) {
 				// @ts-ignore
 				toast.toastHandler({
 					type: 'error',
-					message: 'something wen wrong :(',
+					message: 'something went wrong :(',
 					open: true,
 				});
 			}
@@ -43,7 +44,7 @@ const OnboardingForm = () => {
 			component: () => (
 				<Input
 					value={formState.firstName}
-					status='primary'
+					status='secondary'
 					onChange={(event) =>
 						setFormState({ ...formState, firstName: event.target.value })
 					}
@@ -57,7 +58,7 @@ const OnboardingForm = () => {
 			component: () => (
 				<Input
 					value={formState.lastName}
-					status='primary'
+					status='secondary'
 					onChange={(event) =>
 						setFormState({ ...formState, lastName: event.target.value })
 					}
@@ -71,7 +72,7 @@ const OnboardingForm = () => {
 			component: () => (
 				<Input
 					value={formState.gender}
-					status='primary'
+					status='secondary'
 					onChange={(event) =>
 						setFormState({ ...formState, gender: event.target.value })
 					}
@@ -85,7 +86,7 @@ const OnboardingForm = () => {
 			component: () => (
 				<Input
 					value={formState.age}
-					status='primary'
+					status='secondary'
 					onChange={(event) =>
 						setFormState({ ...formState, age: event.target.value })
 					}
@@ -99,7 +100,7 @@ const OnboardingForm = () => {
 			component: () => (
 				<Input
 					value={formState.currentCity}
-					status='primary'
+					status='secondary'
 					onChange={(event) =>
 						setFormState({ ...formState, currentCity: event.target.value })
 					}
@@ -109,20 +110,26 @@ const OnboardingForm = () => {
 		},
 	];
 	return (
-		<OnboardingFormContainer>
-			<span
-				className='title'
-				dangerouslySetInnerHTML={{ __html: dynamicTitle(step) }}
-			></span>
-			{onboardingFormJSON
-				.filter((item) => item.step === step)
-				.map((item) => (
-					<Fragment key={item.id}>{item.component()}</Fragment>
-				))}
-			<IconButton id='submit' color='primary'>
-				<ArrowForwardIosIcon onClick={onNextStep} />
-			</IconButton>
-		</OnboardingFormContainer>
+		<>
+			{step === 4 ? (
+				<Loader width='100%' height='100%' />
+			) : (
+				<OnboardingFormContainer>
+					<span
+						className='title'
+						dangerouslySetInnerHTML={{ __html: dynamicTitle(step) }}
+					></span>
+					{onboardingFormJSON
+						.filter((item) => item.step === step)
+						.map((item) => (
+							<Fragment key={item.id}>{item.component()}</Fragment>
+						))}
+					<IconButton id='submit' color='secondary'>
+						<ArrowForwardIosIcon onClick={onNextStep} />
+					</IconButton>
+				</OnboardingFormContainer>
+			)}
+		</>
 	);
 };
 export default OnboardingForm;
@@ -134,11 +141,14 @@ const OnboardingFormContainer = styled.div`
 	//justify-content: flex-end;
 	gap: 2rem;
 	padding: 1rem;
+	color: #5151c6;
+	box-shadow: #5151c6 0px 2px 8px 0px;
+	border-radius: 1rem;
 	.submit {
 		float: right;
 	}
 	.title {
-		font-size: 50px;
+		font-size: 40px;
 		line-height: 1.5em;
 	}
 `;
