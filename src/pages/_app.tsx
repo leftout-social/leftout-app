@@ -8,6 +8,9 @@ import useDeviceWidth from '~/hooks/use-device-width';
 import {getUserDetail} from "~/services/auth-service";
 import Loading from "~/components/Loading";
 import styled from "styled-components";
+import Cookies from "js-cookie";
+import {requestInterceptor, responseInterceptor} from "~/config/axios";
+
 export default function App({ Component, pageProps }: AppProps) {
 	// @ts-ignore
 
@@ -28,15 +31,11 @@ export default function App({ Component, pageProps }: AppProps) {
 	const fetchUserDetails = async () => {
 		setLoading(true)
 		try {
-			const id = localStorage.getItem('leftout-id');
-			if (id) {
+			const id = await localStorage.getItem('leftout-id');
+			const token = await Cookies.get('leftout-login')
+			if (id && token) {
 				const response = await getUserDetail(id)
-				if(response.status !== 200){
-					await localStorage.clear()
-					await router.push('/login')
-				}
-				console.log(response)
-				setInitialData({ ...initalData, userData: response });
+				setInitialData({ ...initalData, userData: response.data });
 			} else if(router.pathname !== '/reset' ) await router.push('/login');
 		} catch (e) {
 			console.error({ e });
@@ -44,6 +43,10 @@ export default function App({ Component, pageProps }: AppProps) {
 		}
 		setLoading(false)
 	};
+	useEffect(() => {
+		requestInterceptor();
+		responseInterceptor();
+	}, [])
 	useEffect(() => {
 		(async () => await fetchUserDetails())();
 	}, []);
@@ -66,7 +69,7 @@ export default function App({ Component, pageProps }: AppProps) {
 const Container = styled.div`
 	width: 100%;
 	height: 100%;
-	 background:#F1F1FE;
+	background:#F1F1FE;
 `;
 
 const Wrapper = styled.div`
