@@ -37,7 +37,7 @@ export const onboard = async(data: any, id: any) => {
         current_location: data.currentCity,
         id: id
     })
-    return response.data
+    return response.data;
 }
 
 export const getUserDetail = async(id: any) => {
