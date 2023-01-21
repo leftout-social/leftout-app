@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import {forgotPasswordWithEmail, login, signup} from "~/services/auth-service";
 import InitalDataContext from "~/context/initial-data-context";
 import {BottomDrawer} from "~/components/BottomDrawer";
+import ClearIcon from '@mui/icons-material/Clear';
 const LoginForm = () => {
 	const router = useRouter();
 	const [formState, setFormState] = useState({ email: '', password: '' });
@@ -60,6 +61,7 @@ const LoginForm = () => {
 		}
 		setForgotLoading(false)
 	}
+
 	return (
 		<ParentContainer blur={forgotDrawer}>
 			<Input
@@ -102,14 +104,12 @@ const LoginForm = () => {
 					<span onClick={() => setLoginState('LOGIN')}> LOGIN</span>
 				</StateWording>
 			)}
-			<div className='company-promotion'>
-				<span>Made with &#128156; in India</span>
-			</div>
-			<BottomDrawer id='forgot-drawer' open={forgotDrawer} onClose={() => {
-				setForgotDrawer(false);
-				setFormState({email: '', password: ''});
-			}}>
+			<BottomDrawer id='forgot-drawer' open={forgotDrawer}>
 				<DrawerParent>
+					<ClearIcon className='close-icon' onClick={() => {
+						setForgotDrawer(false);
+						setFormState({email: '', password: ''});
+					}}/>
 					<Input
 						value={formState.email}
 						placeholder='email'
@@ -163,26 +163,10 @@ const ParentContainer = styled.div<{blur: boolean}>`
 		letter-spacing: 2px;
 		text-transform: uppercase;
 		color: #5252C7;
+		cursor: pointer;
 
 	}
-	.company-promotion {
-		position: fixed;
-		bottom: 2rem;
-		display: flex;
-		justify-content: center;
-		width: 90%;
-		span {
-			font-family: 'Circular Std', serif;
-			font-style: normal;
-			font-weight: 400;
-			font-size: 14px;
-			line-height: 120%;
-			text-align: center;
-			letter-spacing: 2px;
-			text-transform: uppercase;
-			color: #000000;
-		}
-	}
+
 `;
 const StateWording = styled.div`
 	display: flex;
@@ -205,7 +189,14 @@ const DrawerParent = styled.div`
   flex-direction: column;
   gap: 1rem;
   padding: 2rem;
+	position: relative;
   height: 50%;
+	.close-icon {
+		position: absolute;
+		right: 2rem;
+		top: 0;
+		cursor: pointer;
+	}
   .input {
     height: 60px;
     font-size: 18px;
