@@ -23,7 +23,7 @@ const OnboardingForm = () => {
 	const [step, setStep] = useState(1);
 	const onNextStep = async () => {
 		setStep(step + 1);
-		if (step == 3) {
+		if (step == 2) {
 			try {
 				await onboard(formState, id);
 				await router.push('/');
@@ -54,7 +54,7 @@ const OnboardingForm = () => {
 		},
 		{
 			id: 2,
-			step: 2,
+			step: 1,
 			component: () => (
 				<Input
 					value={formState.lastName}
@@ -68,7 +68,7 @@ const OnboardingForm = () => {
 		},
 		{
 			id: 3,
-			step: 3,
+			step: 2,
 			component: () => (
 				<Input
 					value={formState.gender}
@@ -82,7 +82,7 @@ const OnboardingForm = () => {
 		},
 		{
 			id: 4,
-			step: 3,
+			step: 2,
 			component: () => (
 				<Input
 					value={formState.age}
@@ -96,7 +96,7 @@ const OnboardingForm = () => {
 		},
 		{
 			id: 5,
-			step: 3,
+			step: 2,
 			component: () => (
 				<Input
 					value={formState.currentCity}
@@ -111,7 +111,7 @@ const OnboardingForm = () => {
 	];
 	return (
 		<>
-			{step === 4 ? (
+			{step === 3 ? (
 				<Loader width='100%' height='100%' />
 			) : (
 				<OnboardingFormContainer>
@@ -142,7 +142,7 @@ const OnboardingFormContainer = styled.div`
 	gap: 2rem;
 	padding: 1rem;
 	color: #5151c6;
-	box-shadow: #5151c6 0px 2px 8px 0px;
+	// box-shadow: #5151c6 0px 2px 8px 0px;
 	border-radius: 1rem;
 	.submit {
 		float: right;
