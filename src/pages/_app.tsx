@@ -35,8 +35,7 @@ export default function App({ Component, pageProps }: AppProps) {
 			const token = await Cookies.get('leftout-login')
 			if (id && token) {
 				const response = await getUserDetail(id)
-				console.log(response)
-				setInitialData({ ...initalData, userData: response });
+				setInitialData({ ...initalData, userData: response.data });
 			} else if(router.pathname !== '/reset' ) await router.push('/login');
 		} catch (e) {
 			console.error({ e });
