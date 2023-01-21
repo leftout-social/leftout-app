@@ -5,11 +5,14 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ProfileComponent from '~/modules/profile/ProfileComponent';
 import { useContext } from 'react';
 import InitalDataContext from '~/context/initial-data-context';
+import Cookies from "js-cookie";
 const Profile = () => {
 	const router = useRouter();
 	const { userData } = useContext(InitalDataContext);
+	console.log(userData)
 	const logout = async() => {
-		localStorage.clear();
+		await localStorage.clear();
+		await Cookies.remove('leftout-login');
 		await router.replace('/login');
 	};
 	return (
