@@ -68,14 +68,14 @@ export default function App({ Component, pageProps }: AppProps) {
 			{!loading && <Container>
 				<Wrapper>
 					<Component {...pageProps} />
-					<NavContainer>
+					{!['/login', '/reset'].includes(router.pathname) && <NavContainer>
 						<BottomNavbar openNewPostDrawer={openNewPostDrawer}/>
-					</NavContainer>
-					<BottomDrawer id='post-drawer' open={openBottomDrawer}>
+					</NavContainer>}
+					{!['/login', '/reset'].includes(router.pathname) && <BottomDrawer id='post-drawer' open={openBottomDrawer}>
 					    <CreatePost closeDrawer={() => {
 							setOpenBottomDrawer(false);
 						}}/>
-					</BottomDrawer>
+					</BottomDrawer>}
 				</Wrapper>
 
 			</Container>}
