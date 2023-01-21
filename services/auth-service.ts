@@ -1,19 +1,8 @@
 import axios from "axios";
-import Cookies from 'js-cookie';
+import $axios from '../config/axios';
 
 const _apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-let token;
-if (typeof window !== 'undefined') {
-    // Perform localStorage action
-//    token = localStorage.getItem('leftout-login');
-   token = Cookies.get('leftout-login');
-}
-const $axios = axios.create({
-    headers: {
-        'Authorization': `Bearer ${token}`
-    }
-})
 export const login = async(data: any) => {
     const response = await axios.post(`${_apiBaseUrl}/login`, {
         email_id: data.email,
