@@ -6,10 +6,11 @@ import InitalDataContext, { GlobalData } from '~/context/initial-data-context';
 import { useRouter } from 'next/router';
 import useDeviceWidth from '~/hooks/use-device-width';
 import {getUserDetail} from "~/services/auth-service";
-import { Loading } from '@nextui-org/react';
+import Loading from "~/components/Loading";
 import styled from "styled-components";
 export default function App({ Component, pageProps }: AppProps) {
 	// @ts-ignore
+
 	const { height, width } = useDeviceWidth();
 	const [loading, setLoading] = useState<boolean>(true)
 	const router = useRouter();
@@ -55,17 +56,23 @@ export default function App({ Component, pageProps }: AppProps) {
 	};
 	return (
 		<InitalDataContext.Provider value={initalDataValue}>
-			{loading && <Container><Loading size='xl' color='currentColor' /></Container>}
-			{!loading && <Component {...pageProps} />}
+			{loading && <Loading />}
+			{!loading && <Container><Wrapper><Component {...pageProps} /></Wrapper></Container>}
 			<Toast></Toast>
 		</InitalDataContext.Provider>
 	);
 }
+
 const Container = styled.div`
-	height: 100%;
 	width: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	color: #5252C7;
+	height: 100%;
+	 background:#F1F1FE;
+`;
+
+const Wrapper = styled.div`
+	width: 100%;
+	height: 100%;
+	max-width: 900px;
+	margin: 0 auto;
+	background: #ffffff;
 `;

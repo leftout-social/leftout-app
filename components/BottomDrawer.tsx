@@ -1,41 +1,53 @@
 import * as React from 'react';
-import { Drawer } from '@mui/material';
+import { Drawer, DrawerProps } from '@mui/material';
 import styled from 'styled-components';
+import {useEffect, useState} from "react";
 
-interface DrawerProps {
+interface BottomDrawerProps extends DrawerProps {
     id: string;
     open: boolean;
     children: JSX.Element | JSX.Element[];
     onClose?: () => void;
 }
 
-export const BottomDrawer = ({ id, open, children, onClose }: DrawerProps) => {
+export const BottomDrawer = ({ ...props }: BottomDrawerProps) => {
+    const [isMobile, setIsMobile] = useState<boolean>(true);
     const closeHandler = () => {
-        if (onClose) {
-            onClose();
+        if (props.onClose) {
+            props.onClose();
         }
         return;
     };
-
+    useEffect(() => {
+        if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+            // true for mobile device
+            setIsMobile(true)
+        }else{
+            // false for not mobile device
+            setIsMobile(false);
+        }
+    }, [])
     return (
         <div>
-            <React.Fragment key={id}>
-                <StyledDrawer anchor='bottom' open={open} onClose={closeHandler}>
+            <React.Fragment key={props.id}>
+                <StyledDrawer anchor={isMobile ? 'bottom' : 'left'} onClose={closeHandler}  {...props} isMobile={isMobile}>
                     <TopBar>
                         <div className='horizontal-bar'></div>
                     </TopBar>
-                    <Content>{children}</Content>
+                    <Content>{props.children}</Content>
                 </StyledDrawer>
             </React.Fragment>
         </div>
     );
 };
 
-const StyledDrawer = styled(Drawer)`
+const StyledDrawer = styled(Drawer)<{isMobile: boolean}>`
     .MuiDrawer-paper {
-        max-height: calc(100vh - 64px);
-        border-radius: 20px 20px 0 0;
+        max-height: ${(props) => props.isMobile ? 'calc(100vh - 64px)' : '100%'};
+        border-radius: ${(props) => props.isMobile ? '20px 20px 0 0' :'0 20ox 20px 0'};
         overflow: hidden;
+        width: 100%;
+        max-width: 500px;
     }
 `;
 

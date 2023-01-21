@@ -18,6 +18,10 @@ const Login = () => {
 			<LoginContainer>
 				<LoginForm />
 			</LoginContainer>
+			<br />
+			<div className='company-promotion'>
+				<span>Made with &#128156; in India</span>
+			</div>
 		</Parent>
 	);
 };
@@ -40,6 +44,21 @@ const Parent = styled.div`
 	//    }
 	//  }
 	//}
+	.company-promotion {
+		display: flex;
+		justify-content: center;
+		span {
+			font-family: 'Circular Std', serif;
+			font-style: normal;
+			font-weight: 400;
+			font-size: 14px;
+			line-height: 120%;
+			text-align: center;
+			letter-spacing: 2px;
+			text-transform: uppercase;
+			color: #000000;
+		}
+	}
 `;
 const LoginImage = styled.div`
 	height: 320px;
