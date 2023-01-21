@@ -1,11 +1,13 @@
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 const _apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 let token;
 if (typeof window !== 'undefined') {
     // Perform localStorage action
-   token = localStorage.getItem('leftout-login');
+//    token = localStorage.getItem('leftout-login');
+   token = Cookies.get('leftout-login');
 }
 const $axios = axios.create({
     headers: {

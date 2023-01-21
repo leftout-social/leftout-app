@@ -6,6 +6,8 @@ import {forgotPasswordWithEmail, login, signup} from "~/services/auth-service";
 import InitalDataContext from "~/context/initial-data-context";
 import {BottomDrawer} from "~/components/BottomDrawer";
 import ClearIcon from '@mui/icons-material/Clear';
+import Cookies from 'js-cookie';
+
 const LoginForm = () => {
 	const router = useRouter();
 	const [formState, setFormState] = useState({ email: '', password: '' });
@@ -20,6 +22,7 @@ const LoginForm = () => {
 			try {
 				const response = await login(formState)
 				localStorage.setItem('leftout-login', response.jwt_token);
+                Cookies.set('leftout-login', response.jwt_token);
 				localStorage.setItem('leftout-id', response.user_id)
 				if(response.user_data.length === 1) return await router.push('/')
 				await router.push(`/onboarding?id=${response.user_id}`);
