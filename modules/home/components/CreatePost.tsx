@@ -19,20 +19,12 @@ const CreatePost = ({ closeDrawer }: createPostProps) => {
 		desc: '',
 		commute: 'Flight',
 	});
-	const [selected, setSelected] = React.useState(new Set(['Flight']));
-
-	const selectedValue = React.useMemo(
-		() => Array.from(selected).join(', ').replaceAll('_', ' '),
-		[selected]
-	);
 	const commuteTypes = ['Flight', 'Train', 'Bus', 'Car', 'Bike'];
 
-    useEffect(() => {
-        setFormState({...formState, commute: selectedValue});
-    }, [selectedValue])
-
-    console.log("formState", formState);
-
+    const handleDropdown = (val: any) => {
+        setFormState({...formState, commute: val.currentKey});
+    }
+   
 	return (
 		<Parent>
 			<NavBarContainer>
@@ -82,14 +74,14 @@ const CreatePost = ({ closeDrawer }: createPostProps) => {
 			<p className='commute'>Commute</p>
 			<Dropdown>
 				<Dropdown.Button flat color='secondary'>
-					{selectedValue}
+					{formState.commute}
 				</Dropdown.Button>
 				<Dropdown.Menu
                     aria-label="Single selection actions"
 					color='secondary'
 					selectionMode='single'
-					selectedKeys={selected}
-					onSelectionChange={setSelected}
+					selectedKeys={formState.commute}
+					onSelectionChange={(val) => handleDropdown(val)}
 				>
 					{commuteTypes.map((commute) => (
 						<Dropdown.Item key={commute}>{commute}</Dropdown.Item>
