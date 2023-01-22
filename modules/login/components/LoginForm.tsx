@@ -23,7 +23,7 @@ const LoginForm = () => {
 				const response = await login(formState)
                 await Cookies.set('leftout-login', response.jwt_token);
 				await localStorage.setItem('leftout-id', response.user_id)
-				if(response.user_data.length === 1) return await router.push('/')
+				if(response.user_data.length === 1) return window.location.href = '/'
 				await router.push(`/onboarding?id=${response.user_id}`);
 			}
 			catch (e){

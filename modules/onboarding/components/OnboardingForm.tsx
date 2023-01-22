@@ -26,7 +26,7 @@ const OnboardingForm = () => {
 		if (step == 2) {
 			try {
 				await onboard(formState, id);
-				await router.push('/');
+				window.location.href = '/'
 			} catch (e) {
 				// @ts-ignore
 				toast.toastHandler({

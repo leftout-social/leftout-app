@@ -21,7 +21,7 @@ export default function Home() {
     const fetchFeeds = async() => {
         setLoading(true);
         try {
-            const data = await getAllFeeds(userLocation.coords.latitude, userLocation.coords.longitude);
+            const data = await getAllFeeds(userLocation?.coords?.latitude || 20, userLocation?.coords?.longitude || 70);
             setFeeds(data.data)
             setLoading(false)
         }
@@ -32,7 +32,7 @@ export default function Home() {
     }
     useEffect(() => {
         (async() => await fetchFeeds())();
-    }, [userLocation])
+    }, [])
     return (
         <Parent>
           <div className='scroll-container'>

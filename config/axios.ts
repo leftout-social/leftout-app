@@ -21,10 +21,12 @@ export const responseInterceptor = () => {
         async (error) => {
             const originalRequest = error?.config;
             if (error?.response?.status === 401) {
-                Cookies.remove('leftout-login');
-                window.location.href = '/login';
+                    Cookies.remove('leftout-login');
+                    window.location.href = '/login'
                 return $axios.request(originalRequest);
             } else {
+                Cookies.remove('leftout-login');
+                window.location.href = '/login'
                 throw error;
             }
         }

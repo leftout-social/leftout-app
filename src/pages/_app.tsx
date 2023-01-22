@@ -56,7 +56,6 @@ export default function App({Component, pageProps}: AppProps) {
     useEffect(() => {
         requestInterceptor();
         responseInterceptor();
-
     }, []);
 
     useEffect(() => {
