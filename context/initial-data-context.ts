@@ -20,12 +20,20 @@ export type GlobalData = {
     deviceWidth: number;
     toast: ToastProps;
     userData: any;
+    userGeoLocation: {
+        permission: boolean;
+        data: any;
+    }
 }
 
 const InitalDataContext = createContext<GlobalData>({
     deviceWidth: 0,
     toast: ToastDefaultValue,
     userData: {},
+    userGeoLocation: {
+        permission: false,
+        data: {},
+    }
 
 });
 

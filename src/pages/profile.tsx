@@ -13,7 +13,7 @@ const Profile = () => {
 	const logout = async() => {
 		await localStorage.clear();
 		await Cookies.remove('leftout-login');
-		await router.push('/login');
+		window.location.href = '/login';
 	};
 	return (
 		<Parent>
