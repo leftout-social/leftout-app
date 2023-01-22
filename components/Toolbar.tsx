@@ -10,7 +10,7 @@ const Toolbar = ({onBackClick, onRightButtonClick, rightButtonJSX}: ToolbarProps
     return (
         <ToolbarContainer>
             <IconButton onClick={onBackClick} className='icon-btn'>
-                <ArrowBackIcon htmlColor='#42C2FF'/>
+                <ArrowBackIcon htmlColor='#7e33ca'/>
             </IconButton>
             {rightButtonJSX && <IconButton onClick={onRightButtonClick} className='icon-btn-right'>
                 {rightButtonJSX}
@@ -29,8 +29,7 @@ const ToolbarContainer = styled.div`
   align-items: center;
   padding: 1rem;
   .icon-btn {
-    background: #f1f1f1;
-    border: 1px solid #42C2FF;
+    background: #F1F1FE;
   }
   .icon-btn-right {
     background: #ffc6c4;

@@ -18,13 +18,13 @@ const Onboarding = () => {
 			<FormContainer>
 				<OnboardingForm />
 			</FormContainer>
-			<LottieContainer>
+			{/* <LottieContainer>
 				<LottieAnimation
 					animationJson='https://assets9.lottiefiles.com/packages/lf20_TOdpiB.json'
 					height={200}
 					width='100%'
 				/>
-			</LottieContainer>
+			</LottieContainer> */}
 		</Container>
 	);
 };
