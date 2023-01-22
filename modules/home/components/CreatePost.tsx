@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Button, Input, Dropdown } from '@nextui-org/react';
 import { useState } from 'react';
