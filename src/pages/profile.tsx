@@ -26,11 +26,11 @@ const Profile = () => {
 			</div>
 			<div className='scroll-container'>
 				<ProfileComponent
-					currentCity={userData?.current_city}
+					currentCity={userData?.current_location}
 					gender={userData?.gender}
 					firstName={userData?.first_name}
 					lastName={userData?.last_name}
-					age={userData?.age}
+					age={userData?.current_age}
 				/>
 			</div>
 		</Parent>
@@ -43,16 +43,12 @@ const Parent = styled.div`
 	max-width: 850px;
 	margin: 0 auto;
 	position: relative;
-	background: #f5f5f5;
 	.fixed-header {
 		position: fixed;
 		width: 100%;
 		max-width: 850px;
 		margin: 0 auto;
 		top: 0;
-	}
-	.scroll-container {
-		padding-top: 80px;
 	}
 `;
 

@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 import { Button, Input, Dropdown } from '@nextui-org/react';
 import { useState } from 'react';
@@ -16,16 +17,19 @@ const CreatePost = ({ closeDrawer }: createPostProps) => {
 		location: 'Goa',
 		groupSize: 1,
 		desc: '',
-		commute: 'flight',
+		commute: 'Flight',
 	});
-	// const size = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-	const commuteTypes = ['flight', 'train', 'bus', 'car', 'bike'];
+	const commuteTypes = ['Flight', 'Train', 'Bus', 'Car', 'Bike'];
 
+    const handleDropdown = (val: any) => {
+        setFormState({...formState, commute: val.currentKey});
+    }
+   
 	return (
 		<Parent>
 			<NavBarContainer>
 				<CloseIcon fontSize='medium' onClick={closeDrawer} />
-				<Button size='xs' color='primary' rounded>
+				<Button size='xs' color='secondary' rounded>
 					Post
 				</Button>
 			</NavBarContainer>
@@ -33,7 +37,7 @@ const CreatePost = ({ closeDrawer }: createPostProps) => {
 			<Input
 				value={formState.location}
 				clearable
-				status='primary'
+				status='secondary'
 				onChange={(event) =>
 					setFormState({ ...formState, location: event.target.value })
 				}
@@ -52,7 +56,7 @@ const CreatePost = ({ closeDrawer }: createPostProps) => {
 			<Input
 				value={formState.groupSize}
 				clearable
-				status='primary'
+				status='secondary'
 				onChange={(event) =>
 					setFormState({ ...formState, groupSize: Number(event.target.value) })
 				}
@@ -61,12 +65,24 @@ const CreatePost = ({ closeDrawer }: createPostProps) => {
 				type='number'
 			/>
 
-			<Textarea label='Description' status='primary' css={{ color: 'black' }} />
+			<Textarea
+				label='Description'
+				status='secondary'
+				css={{ color: 'black' }}
+			/>
 
 			<p className='commute'>Commute</p>
 			<Dropdown>
-				<Dropdown.Button flat>{formState.commute}</Dropdown.Button>
-				<Dropdown.Menu aria-label='Static Actions'>
+				<Dropdown.Button flat color='secondary'>
+					{formState.commute}
+				</Dropdown.Button>
+				<Dropdown.Menu
+                    aria-label="Single selection actions"
+					color='secondary'
+					selectionMode='single'
+					selectedKeys={formState.commute}
+					onSelectionChange={(val) => handleDropdown(val)}
+				>
 					{commuteTypes.map((commute) => (
 						<Dropdown.Item key={commute}>{commute}</Dropdown.Item>
 					))}
@@ -101,7 +117,7 @@ const Parent = styled.div`
 	}
 	transition: transform 1s ease;
 	.commute {
-		color: #0073f4;
+		color: #7e33ca;
 		margin: -10px 0 -30px;
 		font-size: 15px;
 	}
