@@ -1,16 +1,17 @@
 import styled from "styled-components";
 import {IconButton} from "@mui/material";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 interface ToolbarProps {
-    onBackClick: () => void;
+    onLeftButtonClick: () => void;
     onRightButtonClick?: () => void;
     rightButtonJSX?:  JSX.Element | JSX.Element[];
+    leftButtonJSX?: JSX.Element | JSX.Element[];
 }
-const Toolbar = ({onBackClick, onRightButtonClick, rightButtonJSX}: ToolbarProps) => {
+const Toolbar = ({onLeftButtonClick, onRightButtonClick, rightButtonJSX, leftButtonJSX = <ManageAccountsIcon htmlColor='#7e33ca' />}: ToolbarProps) => {
     return (
         <ToolbarContainer>
-            <IconButton onClick={onBackClick} className='icon-btn'>
-                <ArrowBackIcon htmlColor='#7e33ca'/>
+            <IconButton onClick={onLeftButtonClick} className='icon-btn'>
+                {leftButtonJSX}
             </IconButton>
             {rightButtonJSX && <IconButton onClick={onRightButtonClick} className='icon-btn-right'>
                 {rightButtonJSX}

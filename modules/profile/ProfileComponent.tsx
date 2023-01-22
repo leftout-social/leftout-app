@@ -1,8 +1,5 @@
 import styled from 'styled-components';
-import { User } from '@nextui-org/react';
-import { DummyFeedList } from '~/modules/home/utils';
-import { Fragment, useState } from 'react';
-import TravelPostCard from '~/components/TravelPostCard';
+import { useState } from 'react';
 interface ProfileComponentProps {
 	firstName: string;
 	lastName: string;
@@ -110,7 +107,6 @@ const UserDetails = styled.div`
 	font-size: 20px;
 	line-height: 120%;
 	text-align: center;
-	color: #24242;
     .sub-details {
         display: flex;
         justify-content: center;
@@ -126,7 +122,7 @@ const UserDetails = styled.div`
 const TabContainer = styled.div`
 	display: flex;
 	padding: 0 8px;
-	width: calc(100vw - 16px);
+	width: inherit;
 	margin-top: 20px;
 `;
 
@@ -145,11 +141,4 @@ const TabValue = styled.span<{
 	border-radius: 6px;
 	background: ${(props) =>
 		props.setTab === props.currTab ? `#F1F1FE` : '#FFFFFF'};
-`;
-
-
-const Divider = styled.div`
-	height: 5px;
-	width: 100%;
-	background: #42c2ff;
 `;

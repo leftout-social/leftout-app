@@ -1,39 +1,48 @@
 
-// import Tabs from '~/modules/home/components/Tabs';
 import styled from 'styled-components';
-import {DummyFeedList} from '~/modules/home/utils';
-import {Fragment} from 'react';
-import TravelPostCard from '~/components/TravelPostCard';
-// import AddIcon from '@mui/icons-material/Add';
-// import { BottomDrawer } from '~/components/BottomDrawer';
-// import CreatePost from '~/modules/home/components/CreatePost';
-// import BottomNavbar from "~/modules/nav/components/BottomNavbar";
+import {Fragment, useEffect, useState} from 'react';
+import {getAllFeeds} from "~/services/auth-service";
+import FeedCard from "~/modules/home/components/FeedCard";
+import Loading from "~/components/Loading";
 
 export default function Home() {
-    //const [openBottomDrawer, setOpenBottomDrawer] = useState<boolean>(false);
-    // const [currentTab, setCurrentTab] = useState<number>(1);
-
+    const [feeds, setFeeds] = useState<any>();
+    const [userLocation, setUserLocation] = useState<any>({});
+    const [loading, setLoading] = useState<boolean>(false)
+    const successCallback = (position: any) => {
+        setUserLocation(position)
+    };
+    const errorCallback = (error: any) => {
+        setUserLocation({})
+    };
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    }, []);
+    const fetchFeeds = async() => {
+        setLoading(true);
+        try {
+            const data = await getAllFeeds(userLocation.coords.latitude, userLocation.coords.longitude);
+            setFeeds(data.data)
+            setLoading(false)
+        }
+        catch (error){
+            console.error(error)
+            setLoading(false)
+        }
+    }
+    useEffect(() => {
+        (async() => await fetchFeeds())();
+    }, [userLocation])
     return (
         <Parent>
-            {/*<div className='fixed-header'>*/}
-            {/*	<Tabs />*/}
-            {/*</div>*/}
           <div className='scroll-container'>
-                {DummyFeedList.map((item) => (
-                    <Fragment key={item.id}>
-                        <TravelPostCard {...item} self={false}/>
-                    </Fragment>
-                ))}
+              {loading && <Loading />}
+              {!loading && feeds && feeds.map((item: any) => (
+                  <Fragment key={item.feed_id}>
+                      <FeedCard {...item} />
+                  </Fragment>
+              ))}
             </div>
-            {/*<div className='add' onClick={() => setOpenBottomDrawer(true)}>*/}
-            {/*    <AddIcon />*/}
-            {/*</div>*/}
-            {/*<BottomDrawer id='post-drawer' open={openBottomDrawer}>*/}
-            {/*    <CreatePost closeDrawer={() => setOpenBottomDrawer(false)}/>*/}
-            {/*</BottomDrawer>*/}
-            {/*<NavContainer>*/}
-            {/*    <BottomNavbar currentTab={currentTab} setTab={setCurrentTab}/>*/}
-            {/*</NavContainer>*/}
 
         </Parent>
     );
@@ -41,12 +50,13 @@ export default function Home() {
 const Parent = styled.div`
   height: 100%;
   width: 100%;
+  background:  #F6F7F9;
   .scroll-container {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    padding: 2rem 2rem 8rem 2rem;
-    background: #ffffff;
+    padding: 2rem 1rem 8rem 1rem;
+    background:  #F6F7F9;
   }
 
   //

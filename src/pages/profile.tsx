@@ -1,13 +1,11 @@
 import styled from 'styled-components';
 import Toolbar from '~/components/Toolbar';
-import { useRouter } from 'next/router';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ProfileComponent from '~/modules/profile/ProfileComponent';
 import { useContext } from 'react';
 import InitalDataContext from '~/context/initial-data-context';
 import Cookies from "js-cookie";
 const Profile = () => {
-	const router = useRouter();
 	const { userData } = useContext(InitalDataContext);
 	console.log(userData)
 	const logout = async() => {
@@ -15,11 +13,14 @@ const Profile = () => {
 		await Cookies.remove('leftout-login');
 		window.location.href = '/login';
 	};
+	const editProfile = () => {
+		console.log('edit triggered')
+	}
 	return (
 		<Parent>
 			<div className='fixed-header'>
 				<Toolbar
-					onBackClick={() => router.push('/')}
+					onLeftButtonClick={editProfile}
 					onRightButtonClick={logout}
 					rightButtonJSX={<LogoutIcon color='error' />}
 				/>

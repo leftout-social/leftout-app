@@ -21,7 +21,7 @@ export default function App({Component, pageProps}: AppProps) {
     const [loading, setLoading] = useState<boolean>(true)
 
     const router = useRouter();
-    const [userLocation, setUserLocation] = useState<any>({});
+
     const [initalData, setInitialData] = useState<GlobalData>({
         deviceWidth: width,
         toast: {...ToastDefaultValue},
@@ -58,17 +58,7 @@ export default function App({Component, pageProps}: AppProps) {
         responseInterceptor();
 
     }, []);
-    const successCallback = (position: any) => {
-        console.log('current', position);
-        setUserLocation(position)
-    };
-    const errorCallback = (error: any) => {
-        console.log(error);
-        setUserLocation({})
-    };
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    }, []);
+
     useEffect(() => {
         (async () => {
             await fetchUserDetails();
@@ -88,10 +78,10 @@ export default function App({Component, pageProps}: AppProps) {
             {!loading && <Container>
                 <Wrapper>
                     <Component {...pageProps} />
-                    {!['/login', '/reset'].includes(router.pathname) && <NavContainer>
-                        <BottomNavbar openNewPostDrawer={openNewPostDrawer}/>
+                    {!['/login', '/reset', '/onboarding'].includes(router.pathname) && <NavContainer>
+                        <BottomNavbar openNewPostDrawer={openNewPostDrawer} />
                     </NavContainer>}
-                    {!['/login', '/reset'].includes(router.pathname) &&
+                    {!['/login', '/reset', '/onboarding'].includes(router.pathname) &&
                         <BottomDrawer id='post-drawer' open={openBottomDrawer}>
                             <CreatePost closeDrawer={() => {
                                 setOpenBottomDrawer(false);
