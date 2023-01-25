@@ -54,8 +54,8 @@ const Parent = styled.div`
   .scroll-container {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    padding: 2rem 1rem 8rem 1rem;
+    gap: 1rem;
+    padding: 1.5rem 1rem 8rem 1rem;
     background:  #F6F7F9;
   }
 
