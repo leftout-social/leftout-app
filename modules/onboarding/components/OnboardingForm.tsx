@@ -124,9 +124,9 @@ const OnboardingForm = () => {
 						.map((item) => (
 							<Fragment key={item.id}>{item.component()}</Fragment>
 						))}
-					<IconButton id='submit' color='secondary'>
-						<ArrowForwardIosIcon onClick={onNextStep} />
-					</IconButton>
+					{/* <IconButton id='submit' color='secondary'> */}
+						<div className='abs'><span className='next-step'><ArrowForwardIosIcon onClick={onNextStep} /></span></div>
+					{/* </IconButton> */}
 				</OnboardingFormContainer>
 			)}
 		</>
@@ -138,17 +138,30 @@ const OnboardingFormContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	//justify-content: flex-end;
 	gap: 2rem;
 	padding: 1rem;
-	color: #5151c6;
-	// box-shadow: #5151c6 0px 2px 8px 0px;
+	color: #7e33ca;
 	border-radius: 1rem;
 	.submit {
 		float: right;
+        height: 40px;
 	}
 	.title {
 		font-size: 40px;
 		line-height: 1.5em;
 	}
+    .next-step {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        float: right;
+        background: #eaddf9;
+        border-radius: 50%;
+        padding: 2px;
+        width: 40px;
+        height: 40px;
+    }
+    // .abs {
+    //     justify-content: flex-end;
+    // }
 `;
