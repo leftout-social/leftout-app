@@ -20,17 +20,21 @@ export const responseInterceptor = () => {
         (response) => response,
         async (error) => {
             const originalRequest = error?.config;
-            if (error?.response?.status === 401) {
-                    Cookies.remove('leftout-login');
-                    window.location.href = '/login'
-                return $axios.request(originalRequest);
-            } else {
-                Cookies.remove('leftout-login');
-                window.location.href = '/login'
-                throw error;
+            if(error?.response?.status === 401 &&  !originalRequest._retry){
+                originalRequest._retry = true;
+                const accessToken = `Bearer ${token}`;
+                if(!accessToken) removeCookieAndLogout();
+                else $axios.defaults.headers.common['Authorization'] = accessToken;
+                return $axios(originalRequest);
             }
+            return $axios.request(originalRequest);
         }
     );
 }
 
+export const removeCookieAndLogout = () => {
+    Cookies.remove('leftout-login');
+    localStorage.clear();
+    window.location.href = '/login'
+}
 export default $axios
