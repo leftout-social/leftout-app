@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Fragment, useState} from "react";
+import { Fragment, useState, useEffect} from "react";
 import {useRouter} from "next/router";
 
 interface BottomTabsProps {
@@ -14,6 +14,7 @@ export type TABS_ENTITY = {
 }
 const BottomNavbar = ({openNewPostDrawer}:BottomTabsProps) => {
     const router = useRouter();
+    const path = router.pathname;
     const [currentTab, setCurrentTab] = useState<number>(1);
     const tabs: TABS_ENTITY[] = [
         {
@@ -58,6 +59,18 @@ const BottomNavbar = ({openNewPostDrawer}:BottomTabsProps) => {
         }
         else openNewPostDrawer();
     }
+    const tabMapWithPath = (path: string) => {
+        let list = {
+            '/profile': 5,
+            '/': 1,
+        }
+        //@ts-ignore
+        return list[path];
+    }
+    useEffect(() => {
+        const currpath = tabMapWithPath(path)
+        setCurrentTab(currpath as number);
+    }, [path])
     return (
         <NavigationContainer>
             {tabs.map(({id, inActiveIcon, activeIcon, title, path}) => {

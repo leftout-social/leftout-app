@@ -1,13 +1,15 @@
 
 import styled from 'styled-components';
-import {Fragment, useEffect, useState} from 'react';
+import {Fragment, useContext, useEffect, useState} from 'react';
 import {getAllFeeds} from "~/services/auth-service";
 import FeedCard from "~/modules/home/components/FeedCard";
 import Loading from "~/components/Loading";
+import InitalDataContext from '~/context/initial-data-context';
 
 export default function Home() {
     const [feeds, setFeeds] = useState<any>();
     const [userLocation, setUserLocation] = useState<any>({});
+    const {userData} = useContext(InitalDataContext);
     const [loading, setLoading] = useState<boolean>(false)
     const successCallback = (position: any) => {
         setUserLocation(position)
@@ -37,11 +39,13 @@ export default function Home() {
         <Parent>
           <div className='scroll-container'>
               {loading && <Loading />}
-              {!loading && feeds && feeds.map((item: any) => (
+              {!loading && feeds && feeds.filter((item: any) => item.user_id !== userData.id ).map((item: any) => {
+                console.log(item, '->', userData.id);
+                return(
                   <Fragment key={item.feed_id}>
-                      <FeedCard {...item} />
+                      <FeedCard {...item} self={false} />
                   </Fragment>
-              ))}
+              )})}
             </div>
 
         </Parent>
