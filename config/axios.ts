@@ -23,12 +23,8 @@ export const responseInterceptor = () => {
             if (error?.response?.status === 401) {
                     Cookies.remove('leftout-login');
                     window.location.href = '/login'
-                return $axios.request(originalRequest);
-            } else {
-                Cookies.remove('leftout-login');
-                window.location.href = '/login'
-                throw error;
             }
+            return $axios.request(originalRequest);
         }
     );
 }

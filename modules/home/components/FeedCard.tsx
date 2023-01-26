@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import dayjs from 'dayjs';
-
+import {getReactionOnFeed, reactOnFeed} from '../../../services/auth-service';
+import { useContext, useEffect, useState } from 'react';
+import InitalDataContext from '~/context/initial-data-context';
 export interface FeedCardProps {
 	profileImage: string;
 	first_name: string;
@@ -16,8 +18,27 @@ export interface FeedCardProps {
 	interested: string[];
 	likes: string[];
 	additional_description: string;
+	feed_id_activity: string;
+	
 }
 const FeedCard = ({ ...props }: FeedCardProps) => {
+	const {userData} = useContext(InitalDataContext);
+	console.log(userData);
+	const [interested, setInterested] = useState(false);
+	const onInterestedClick = async() => {
+		try {
+			const response = await reactOnFeed(props.feed_id, userData.id);
+			console.log(response);
+			setInterested(true);
+		}
+		catch (err) {
+			console.error(err);
+		}
+	}
+	// useEffect(() => {
+	// 	fetchActivityStatus();
+	// }, [])
+	console.log('here -> ', props.feed_id_activity);
 	return (
 		<CardContainer>
 			<ProfileContainer position='top'>
@@ -70,7 +91,8 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 				</Dates>
 			</ContentContainer>
 			<ProfileContainer position='bottom'>
-				<img src='/interested.svg' width={20} height={20} alt='in-icon' />
+				{props.feed_id_activity === undefined && <img src='/interested.svg' width={20} height={20} alt='in-icon' onClick={onInterestedClick}/>}
+				{interested ? 'already' : 'not'}
 				<img src='/like.svg' width={20} height={20} alt='like-icon' />
 			</ProfileContainer>
 		</CardContainer>

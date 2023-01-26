@@ -56,3 +56,17 @@ export const getAllFeeds = async(lat: any, long: any, pageNo: any = 1, pageSize:
     })
     return response.data;
 }
+
+export const reactOnFeed = async(feedId: any, userId: any) => {
+    const response = await $axios.post(`${_apiBaseUrl}/feed/activity/${feedId}`, {
+        user_id: userId
+    })
+    return response.data;
+} 
+
+export const getReactionOnFeed = async(feedId: any, userId: any) => {
+    const response = await $axios.get(`${_apiBaseUrl}/feed/activity/${feedId}?user_id=${userId}`, {
+        validateStatus: (status) => [200, 404].includes(status),
+    })
+    return response.status;
+}
