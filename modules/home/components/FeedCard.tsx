@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import dayjs from 'dayjs';
-import { getReactionOnFeed, reactOnFeed } from '../../../services/auth-service';
+import {reactOnFeed} from '../../../services/auth-service';
 import { useContext, useEffect, useState } from 'react';
 import InitalDataContext from '~/context/initial-data-context';
+import { Loading } from '@nextui-org/react';
 export interface FeedCardProps {
 	profileImage: string;
 	first_name: string;
@@ -19,27 +20,33 @@ export interface FeedCardProps {
 	likes: string[];
 	additional_description: string;
 	feed_id_activity: string;
+	self: boolean;
+	
 }
 const FeedCard = ({ ...props }: FeedCardProps) => {
-	const { userData } = useContext(InitalDataContext);
-	console.log(userData);
+	const {userData} = useContext(InitalDataContext);
 	const [interested, setInterested] = useState(false);
-	const onInterestedClick = async () => {
+	const [loading, setLoading] = useState<boolean>(false);
+	const onInterestedClick = async() => {
+		setLoading(true);
 		try {
 			const response = await reactOnFeed(props.feed_id, userData.id);
 			console.log(response);
 			setInterested(true);
-		} catch (err) {
-			console.error(err);
+			setLoading(false);
 		}
-	};
-	// useEffect(() => {
-	// 	fetchActivityStatus();
-	// }, [])
+		catch (err) {
+			console.error(err);
+			setLoading(false);
+		}
+	}
+	useEffect(() => {
+		props.feed_id_activity && setInterested(true);
+	}, [interested])
 	console.log('here -> ', props.feed_id_activity);
 	return (
 		<CardContainer>
-			<ProfileContainer position='top'>
+			{!props.self && <ProfileContainer position='top ' justifyContent='space-between'>
 				<div className='name-avatar'>
 					<img
 						src='/cardImage/beach-1.jpg'
@@ -50,7 +57,7 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 					<span className='name'>{props.first_name}</span>
 				</div>
 				<span className='time'>{dayjs(props.created_at).format('MMM DD')}</span>
-			</ProfileContainer>
+			</ProfileContainer>}
 			<ContentContainer>
 				<Details>
 					<div className='items'>
@@ -69,16 +76,12 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 						<span id='key'>Trip Medium : </span>
 						<span id='value'>{props.travel_medium}</span>
 					</div>
-					{props.additional_description && (
-						<Description>
-							<span
-								dangerouslySetInnerHTML={{
-									__html: props.additional_description,
-								}}
-								id='value'
-							/>
-						</Description>
-					)}
+					{props.additional_description !== '' && <Description>
+						<span
+							dangerouslySetInnerHTML={{ __html: props.additional_description }}
+							id='value'
+						/>
+					</Description>}
 				</Details>
 				<Dates>
 					<DateContainer>
@@ -92,11 +95,14 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 					</DateContainer>
 				</Dates>
 			</ContentContainer>
-			<ProfileContainer position='bottom'>
-				{props.feed_id_activity === undefined && <img src='/interested.svg' width={20} height={20} alt='in-icon' onClick={onInterestedClick}/>}
-				{interested ? 'already' : 'not'}
-				<img src='/like.svg' width={20} height={20} alt='like-icon' />
-			</ProfileContainer>
+			{!props.self && <ProfileContainer position='bottom' justifyContent='flex-end'>
+				{loading && <Loading />}
+				{!loading && !interested && <div className='interested-btn' onClick={onInterestedClick}>
+					<img src='/interested.svg' width={20} height={20} alt='in-icon' />
+					<span>Interested</span>
+				</div>}
+				{!loading && interested && <span id='sent'>Your interest request has been sent!</span>}
+			</ProfileContainer>}
 		</CardContainer>
 	);
 };
@@ -110,9 +116,10 @@ const CardContainer = styled.div`
 
 const ProfileContainer = styled.div<{
 	position: string;
+	justifyContent: string;
 }>`
 	display: flex;
-	justify-content: space-between;
+	justify-content: ${(props) => props.justifyContent};
 	align-items: center;
 	height: 45px;
 	background: #ffffff;
@@ -149,6 +156,20 @@ const ProfileContainer = styled.div<{
 		/* Text/Placeholder */
 
 		color: #bdbdbd;
+	}
+	#sent {
+		font-size: 14px;
+	}
+	.interested-btn {
+		display: flex;
+		gap: 4px;
+		padding: 2px;
+		font-size: 14px;
+		align-items: center;
+		border-radius: 4px;
+		// background: #ebe6f3;
+		// border: 1px solid #7e33ca;
+		cursor: pointer;
 	}
 `;
 

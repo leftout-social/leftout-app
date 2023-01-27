@@ -71,16 +71,17 @@ export default function App({Component, pageProps}: AppProps) {
         },
     };
     const openNewPostDrawer = () => setOpenBottomDrawer(true);
+    const tabNotEligiblePath = ['/login', '/reset', '/onboarding', '/profile/feed'];
     return (
         <InitalDataContext.Provider value={initalDataValue}>
             {loading && <Loading/>}
             {!loading && <Container>
                 <Wrapper>
                     <Component {...pageProps} />
-                    {!['/login', '/reset', '/onboarding'].includes(router.pathname) && <NavContainer>
+                    {!tabNotEligiblePath.includes(router.pathname) && <NavContainer>
                         <BottomNavbar openNewPostDrawer={openNewPostDrawer} />
                     </NavContainer>}
-                    {!['/login', '/reset', '/onboarding'].includes(router.pathname) &&
+                    {!tabNotEligiblePath.includes(router.pathname) &&
                         <BottomDrawer id='post-drawer' open={openBottomDrawer}>
                             <CreatePost closeDrawer={() => {
                                 setOpenBottomDrawer(false);

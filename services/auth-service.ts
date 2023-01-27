@@ -86,5 +86,12 @@ export const createPost = async(
         location_latitude: latitude,
         location_longitude: longitude,
     });
+}
+export const getFeedByProfile = async() => {
+    const response = await $axios.get(`${_apiBaseUrl}/profile/feed`);
+    return response.data;
+}
+export const getFeedDetails = async(id: any) => {
+    const response = await $axios.get(`${_apiBaseUrl}/profile/feed/${id}`);
     return response.data;
 }
