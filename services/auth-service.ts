@@ -70,3 +70,21 @@ export const getReactionOnFeed = async(feedId: any, userId: any) => {
     })
     return response.status;
 }
+
+export const createPost = async(
+    userId:any, formState: any, latitude?: any, longitude?: any,
+) => {
+    const response = await $axios.post(`${_apiBaseUrl}/feed`, {
+        user_id: userId,
+        travel_start_date: formState.fromDate,
+        travel_end_date: formState.toDate,
+        travel_medium: formState.commute,
+        required_travellers: formState.groupSize,
+        required_travellers_gender: formState.requiredGender,
+        additional_description: formState.desc,
+        travelling_to_location: formState.location,
+        location_latitude: latitude,
+        location_longitude: longitude,
+    });
+    return response.data;
+}

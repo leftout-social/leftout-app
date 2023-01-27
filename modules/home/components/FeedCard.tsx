@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import dayjs from 'dayjs';
-import {getReactionOnFeed, reactOnFeed} from '../../../services/auth-service';
+import { getReactionOnFeed, reactOnFeed } from '../../../services/auth-service';
 import { useContext, useEffect, useState } from 'react';
 import InitalDataContext from '~/context/initial-data-context';
 export interface FeedCardProps {
@@ -19,22 +19,20 @@ export interface FeedCardProps {
 	likes: string[];
 	additional_description: string;
 	feed_id_activity: string;
-	
 }
 const FeedCard = ({ ...props }: FeedCardProps) => {
-	const {userData} = useContext(InitalDataContext);
+	const { userData } = useContext(InitalDataContext);
 	console.log(userData);
 	const [interested, setInterested] = useState(false);
-	const onInterestedClick = async() => {
+	const onInterestedClick = async () => {
 		try {
 			const response = await reactOnFeed(props.feed_id, userData.id);
 			console.log(response);
 			setInterested(true);
-		}
-		catch (err) {
+		} catch (err) {
 			console.error(err);
 		}
-	}
+	};
 	// useEffect(() => {
 	// 	fetchActivityStatus();
 	// }, [])
@@ -71,12 +69,16 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 						<span id='key'>Trip Medium : </span>
 						<span id='value'>{props.travel_medium}</span>
 					</div>
-					<Description>
-						<span
-							dangerouslySetInnerHTML={{ __html: props.additional_description }}
-							id='value'
-						/>
-					</Description>
+					{props.additional_description && (
+						<Description>
+							<span
+								dangerouslySetInnerHTML={{
+									__html: props.additional_description,
+								}}
+								id='value'
+							/>
+						</Description>
+					)}
 				</Details>
 				<Dates>
 					<DateContainer>
@@ -176,7 +178,7 @@ const Details = styled.div`
 const Dates = styled.div`
 	display: flex;
 	flex-direction: column;
-	gap: 6px;
+	gap: 2px;
 	align-items: center;
 	color: #7e33ca;
 `;
@@ -186,6 +188,7 @@ const DateContainer = styled.div`
 	align-items: center;
 	justify-content: center;
 	font-weight: 500;
+    font-size: 13px;
 	padding: 6px;
 	//   border: 1px solid #42C2FF;
 	color: black;
@@ -197,6 +200,6 @@ const Description = styled.div`
 	padding: 6px;
 	background: #ffffff;
 	//   border: 1px solid #7e33ca;
-    font-size: 14px;
+	font-size: 14px;
 	border-radius: 6px;
 `;

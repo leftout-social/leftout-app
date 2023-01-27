@@ -1,35 +1,59 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Button, Input, Dropdown } from '@nextui-org/react';
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import DateRangePicker from '~/components/DateRangePicker';
 import { Textarea } from '@nextui-org/react';
+import { createPost } from '~/services/auth-service';
+import InitalDataContext from '~/context/initial-data-context';
 
 interface createPostProps {
 	closeDrawer: () => void;
 }
 
 const CreatePost = ({ closeDrawer }: createPostProps) => {
+	const { userData } = useContext(InitalDataContext);
 	const [formState, setFormState] = useState({
 		fromDate: '',
 		toDate: '',
 		location: 'Goa',
-		groupSize: 1,
+		groupSize: '1',
+		requiredGender: 'Male',
 		desc: '',
 		commute: 'Flight',
 	});
-	const commuteTypes = ['Flight', 'Train', 'Bus', 'Car', 'Bike'];
+	const commuteTypes = ['Air', 'Train', 'Road', 'Air + Train', 'Road + Train', 'Misc'];
+	const genderTypes = ['Male', 'Female', 'Others', 'All'];
+	// const groupSizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
-    const handleDropdown = (val: any) => {
-        setFormState({...formState, commute: val.currentKey});
-    }
-   
+	const handleDropdown = (val: any) => {
+		setFormState({ ...formState, commute: val.currentKey });
+	};
+
+	const handleGenderDropdown = (val: any) => {
+		console.log(val.currentKey);
+		setFormState({ ...formState, requiredGender: val.currentKey });
+	};
+
+	// const handleGroupSizeDropdown = (val: any) => {
+	// 	setFormState({ ...formState, groupSize: val.currentKey });
+	// };
+
+	const handlePostOnClick = async () => {
+		try {
+			const response =  createPost(userData.id, formState);
+            console.log("response", response);
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
 	return (
 		<Parent>
 			<NavBarContainer>
 				<CloseIcon fontSize='medium' onClick={closeDrawer} />
-				<Button size='xs' color='secondary' rounded>
+				<Button size='xs' color='secondary' rounded onClick={handlePostOnClick}>
 					Post
 				</Button>
 			</NavBarContainer>
@@ -65,10 +89,47 @@ const CreatePost = ({ closeDrawer }: createPostProps) => {
 				type='number'
 			/>
 
+			{/* <p className='commute'>Group Size</p>
+			<Dropdown>
+				<Dropdown.Button flat color='secondary'>
+					{formState.groupSize}
+				</Dropdown.Button>
+				<Dropdown.Menu
+					aria-label='Single selection actions'
+					color='secondary'
+					selectionMode='single'
+					selectedKeys={formState.groupSize}
+					onSelectionChange={(val) => handleGroupSizeDropdown(val)}
+				>
+					{groupSizes.map((size) => (
+						<Dropdown.Item key={`${size}`}>{size}</Dropdown.Item>
+					))}
+				</Dropdown.Menu>
+			</Dropdown> */}
+
+			<p className='commute'>Required Travellers Gender</p>
+			<Dropdown>
+				<Dropdown.Button flat color='secondary'>
+					{formState.requiredGender}
+				</Dropdown.Button>
+				<Dropdown.Menu
+					aria-label='Single selection actions'
+					color='secondary'
+					selectionMode='single'
+					selectedKeys={formState.requiredGender}
+					onSelectionChange={(val) => handleGenderDropdown(val)}
+				>
+					{genderTypes.map((gender) => (
+						<Dropdown.Item key={gender}>{gender}</Dropdown.Item>
+					))}
+				</Dropdown.Menu>
+			</Dropdown>
+
 			<Textarea
 				label='Description'
 				status='secondary'
 				css={{ color: 'black' }}
+				maxLength={80}
 			/>
 
 			<p className='commute'>Commute</p>
@@ -77,7 +138,7 @@ const CreatePost = ({ closeDrawer }: createPostProps) => {
 					{formState.commute}
 				</Dropdown.Button>
 				<Dropdown.Menu
-                    aria-label="Single selection actions"
+					aria-label='Single selection actions'
 					color='secondary'
 					selectionMode='single'
 					selectedKeys={formState.commute}
