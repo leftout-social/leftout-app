@@ -74,18 +74,21 @@ export const getReactionOnFeed = async(feedId: any, userId: any) => {
 export const createPost = async(
     userId:any, formState: any, latitude?: any, longitude?: any,
 ) => {
+    const commute = formState.commute.toUpperCase();
+    const gender = formState.requiredGender.toUpperCase();
     const response = await $axios.post(`${_apiBaseUrl}/feed`, {
         user_id: userId,
         travel_start_date: formState.fromDate,
         travel_end_date: formState.toDate,
-        travel_medium: formState.commute,
+        travel_medium: commute,
         required_travellers: formState.groupSize,
-        required_travellers_gender: formState.requiredGender,
+        required_travellers_gender: gender,
         additional_description: formState.desc,
         travelling_to_location: formState.location,
         location_latitude: latitude,
         location_longitude: longitude,
     });
+    return response.data;
 }
 export const getFeedByProfile = async() => {
     const response = await $axios.get(`${_apiBaseUrl}/profile/feed`);

@@ -8,8 +8,8 @@ import InitalDataContext from '~/context/initial-data-context';
 
 export default function Home() {
     const [feeds, setFeeds] = useState<any>();
-    const [userLocation, setUserLocation] = useState<any>({});
     const {userData} = useContext(InitalDataContext);
+    const [userLocation, setUserLocation] = useState<any>({});
     const [loading, setLoading] = useState<boolean>(false)
     const successCallback = (position: any) => {
         setUserLocation(position)

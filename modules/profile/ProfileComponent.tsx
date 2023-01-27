@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getFeedByProfile } from '~/services/auth-service';
 import FeedCard from '../home/components/FeedCard';
 import React from 'react';
-import {useRouter} from 'next/router';
+import { useRouter } from 'next/router';
 interface ProfileComponentProps {
 	firstName: string;
 	lastName: string;
@@ -21,6 +21,7 @@ const ProfileComponent = ({
 }: ProfileComponentProps) => {
 	const router = useRouter();
 	const [tab, setTab] = useState<number>(1);
+	const inputFile = useRef<HTMLInputElement>(null);
 	const [feeds, setFeeds] = useState<any>([]);
 	const fetchFeeds = async () => {
 		try {
@@ -35,7 +36,10 @@ const ProfileComponent = ({
 	}, []);
 	const onCardClick = (id: any) => {
 		router.push(`/profile/feed?feed_id=${id}`);
-	}
+	};
+	//@ts-ignore
+	const onImageClick = () => inputFile?.current?.click();
+	
 	return (
 		<ProfileContainer>
 			<img
@@ -45,11 +49,18 @@ const ProfileComponent = ({
 				className='image-container'
 			/>
 			<div className='profile-image-container'>
+				<input
+					type='file'
+					id='imgupload'
+					style={{ display: 'none' }}
+					ref={inputFile}
+				/>
 				<img
 					src='/cardImage/beach-1.jpg'
 					width={100}
 					height={100}
 					className='profile-image'
+					onClick={onImageClick}
 				/>
 			</div>
 			<UserDetails>
@@ -71,7 +82,9 @@ const ProfileComponent = ({
 			</TabContainer>
 			<FeedContainer>
 				{feeds?.map((item: any) => (
-					<div key={item.feed_id} onClick={() => onCardClick(item.feed_id)}><FeedCard {...item} self={true} /></div>
+					<div key={item.feed_id} onClick={() => onCardClick(item.feed_id)}>
+						<FeedCard {...item} self={true} />
+					</div>
 				))}
 			</FeedContainer>
 		</ProfileContainer>

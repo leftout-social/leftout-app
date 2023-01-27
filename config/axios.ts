@@ -1,16 +1,19 @@
 import axios from 'axios'
 import Cookies from 'js-cookie';
-import axiosRetry from 'axios-retry';
+import { ToastItem } from "~/components/Toast";
 let token = Cookies.get('leftout-login');
 const $axios = axios.create({
     timeout: 10000,
+    headers: {
+        'Content-Type': 'application/json'
+    }
 });
 
-axiosRetry($axios, {
-    retries: 3, // number of retries
-    retryDelay: () => 10000,
-    retryCondition: () => true,
-});
+// axiosRetry($axios, {
+//     retries: 3, // number of retries
+//     retryDelay: () => 10000,
+//     retryCondition: () => true,
+// });
 
 export const requestInterceptor = () => {
     $axios.interceptors.request.use((request) => {
@@ -23,19 +26,21 @@ export const requestInterceptor = () => {
     }, (error) => Promise.reject(error));
 }
 
-export const responseInterceptor = () => {
+export const responseInterceptor = (toastHandler: (item: ToastItem) => void) => {
     $axios.interceptors.response.use(
         (response) => response,
         async (error) => {
-            const originalRequest = error?.config;
-            if(error?.response?.status === 401 &&  !originalRequest._retry){
-                originalRequest._retry = true;
-                const accessToken = `Bearer ${token}`;
-                if(!accessToken) removeCookieAndLogout();
-                else $axios.defaults.headers.common['Authorization'] = accessToken;
-                return $axios(originalRequest);
-            }
-            return $axios.request(originalRequest);
+            if(error?.response?.status === 401) return removeCookieAndLogout();
+            // originalRequest._retry = true;
+            // if(error?.response?.status === 500 &&  !originalRequest._retry){
+            //     originalRequest._retry = true;
+            //     const accessToken = `Bearer ${token}`;
+            //     if(!accessToken) removeCookieAndLogout();
+            //     else $axios.defaults.headers.common['Authorization'] = accessToken;
+            //     return $axios.request(originalRequest);
+            // }
+            toastHandler({open: true, message: 'Something went wrong', type: 'error'});
+           return Promise.reject(error);
         }
     );
 }

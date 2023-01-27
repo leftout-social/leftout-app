@@ -7,21 +7,24 @@ import DateRangePicker from '~/components/DateRangePicker';
 import { Textarea } from '@nextui-org/react';
 import { createPost } from '~/services/auth-service';
 import InitalDataContext from '~/context/initial-data-context';
+import dayjs from 'dayjs';
 
 interface createPostProps {
 	closeDrawer: () => void;
+	latitude: number;
+	longitude: number;
 }
 
-const CreatePost = ({ closeDrawer }: createPostProps) => {
+const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 	const { userData } = useContext(InitalDataContext);
 	const [formState, setFormState] = useState({
-		fromDate: '',
-		toDate: '',
+		fromDate: dayjs().format('MM-DD-YYYY'),
+		toDate: dayjs().format('MM-DD-YYYY'),
 		location: 'Goa',
 		groupSize: '1',
 		requiredGender: 'Male',
 		desc: '',
-		commute: 'Flight',
+		commute: 'Air',
 	});
 	const commuteTypes = ['Air', 'Train', 'Road', 'Air + Train', 'Road + Train', 'Misc'];
 	const genderTypes = ['Male', 'Female', 'Others', 'All'];
@@ -42,8 +45,9 @@ const CreatePost = ({ closeDrawer }: createPostProps) => {
 
 	const handlePostOnClick = async () => {
 		try {
-			const response =  createPost(userData.id, formState);
+			const response =  await createPost(userData.id, formState, latitude, longitude);
             console.log("response", response);
+			closeDrawer();
 		} catch (err) {
 			console.error(err);
 		}
