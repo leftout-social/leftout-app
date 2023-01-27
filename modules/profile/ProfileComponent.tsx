@@ -39,7 +39,6 @@ const ProfileComponent = ({
 	};
 	//@ts-ignore
 	const onImageClick = () => inputFile?.current?.click();
-	
 	return (
 		<ProfileContainer>
 			<img
