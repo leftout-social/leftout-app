@@ -13,7 +13,6 @@ const Profile = () => {
     const {userData} = useContext(InitalDataContext);
     const onLogoutClick = async () => {
         setLogout(true);
-
     };
     const confirmLogout = async () => {
         await localStorage.clear();
@@ -41,12 +40,15 @@ const Profile = () => {
                     age={userData?.current_age}
                 />
             </div>
-            <BottomDrawer id={'logout'} open={logout}>
-                <DrawerParent>
-                    <Button onClick={() => setLogout(false)} className='cancel'>Cancel</Button>
-                    <Button onClick={confirmLogout} className='confirm'>Logout</Button>
-                </DrawerParent>
-            </BottomDrawer>
+            <div className='bottom-drawer'>
+                <BottomDrawer id='logout' open={logout}>
+                    <DrawerParent>
+                        <Button onClick={() => setLogout(false)} className='cancel'>Cancel</Button>
+                        <Button onClick={confirmLogout} className='confirm'>Logout</Button>
+                    </DrawerParent>
+                </BottomDrawer>
+            </div>
+           
         </Parent>
     );
 };
@@ -65,10 +67,19 @@ const Parent = styled.div`
     margin: 0 auto;
     top: 0;
   }
+  .bottom-drawer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
 `;
 const DrawerParent = styled.div`
-  display: flex;
-	margin: 1rem;
+    display: flex;
+    width: 100vw;
+    justify-content: space-around;
+	padding: 1rem;
 	gap: 5px;
 	.cancel {
 		background: #f2f2f2;

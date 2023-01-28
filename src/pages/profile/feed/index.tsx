@@ -25,19 +25,19 @@ const UserCard = ({
 			<ContentContainer>
 				<Details>
 					<div className='items'>
-						<span id='key'>Name </span>
+						<span id='key'>Name : </span>
 						<span id='value'>{first_name}</span>
 					</div>
                     <div className='items'>
-						<span id='key'>Age</span>
+						<span id='key'>Age : </span>
 						<span id='value'>{current_age}</span>
 					</div>
                     <div className='items'>
-						<span id='key'>Gender </span>
+						<span id='key'>Gender : </span>
 						<span id='value'>{gender}</span>
 					</div>
                     <div className='items'>
-						<span id='key'>Current location </span>
+						<span id='key'>Current location : </span>
 						<span id='value'>{current_location}</span>
 					</div>
 				</Details>
@@ -78,10 +78,10 @@ const FeedInformation = (props: any) => {
 							onLeftButtonClick={onBackClick}
 							leftButtonJSX={<KeyboardBackspaceIcon htmlColor='#7e33ca' />}
 						/>
-						<FeedCard {...feedInfo?.feedInfo} self={true} />
+						<FeedCard {...feedInfo?.feedInfo} borderRadius self={true} />
 					</div>
 					<div className='scroll-container'>
-                        <Title>Interested Peoples</Title>
+                        <Title>Interested People</Title>
                         {feedInfo?.interestedInfo?.map((item: any) => <UserCard {...item} />)}
                     </div>
 				</>
@@ -104,6 +104,7 @@ const Parent = styled.div`
 		margin: 0 auto;
 		top: 0;
         background: #ffffff;
+        padding: 0 0.7rem;
 	}
 	.scroll-container {
 		display: flex;
@@ -124,6 +125,9 @@ const ContentContainer = styled.div`
 	justify-content: space-between;
 	width: inherit;
     border: 1px solid #ebe6f3;
+    border-radius: 8px;
+    background: #E6E6FA;
+    // background: #F3F5F7;
 	padding: 10px 14px;
 `;
 

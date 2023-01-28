@@ -21,7 +21,7 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 		fromDate: dayjs().format('MM-DD-YYYY'),
 		toDate: dayjs().format('MM-DD-YYYY'),
 		location: 'Goa',
-		groupSize: '1',
+		groupSize: 1,
 		requiredGender: 'Male',
 		desc: '',
 		commute: 'Air',
@@ -39,9 +39,9 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 		setFormState({ ...formState, requiredGender: val.currentKey });
 	};
 
-	// const handleGroupSizeDropdown = (val: any) => {
-	// 	setFormState({ ...formState, groupSize: val.currentKey });
-	// };
+    const handleDescChange = (event: any) => {
+        setFormState({...formState, desc: event.target.value});
+    }
 
 	const handlePostOnClick = async () => {
 		try {
@@ -93,24 +93,6 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 				type='number'
 			/>
 
-			{/* <p className='commute'>Group Size</p>
-			<Dropdown>
-				<Dropdown.Button flat color='secondary'>
-					{formState.groupSize}
-				</Dropdown.Button>
-				<Dropdown.Menu
-					aria-label='Single selection actions'
-					color='secondary'
-					selectionMode='single'
-					selectedKeys={formState.groupSize}
-					onSelectionChange={(val) => handleGroupSizeDropdown(val)}
-				>
-					{groupSizes.map((size) => (
-						<Dropdown.Item key={`${size}`}>{size}</Dropdown.Item>
-					))}
-				</Dropdown.Menu>
-			</Dropdown> */}
-
 			<p className='commute'>Required Travellers Gender</p>
 			<Dropdown>
 				<Dropdown.Button flat color='secondary'>
@@ -134,6 +116,7 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 				status='secondary'
 				css={{ color: 'black' }}
 				maxLength={80}
+                onChange={(event) => handleDescChange(event)}
 			/>
 
 			<p className='commute'>Commute</p>
