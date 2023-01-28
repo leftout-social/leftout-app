@@ -25,12 +25,11 @@ const Reset = (props: any) => {
         if(formState.new_password !== formState.confirm_password) return toast.toastHandler({type: 'error', open: true, message: 'password and verify password does not matches'});
         try {
             const response = await resetPassword(formState)
-            console.log(response)
             toast.toastHandler({type: 'info', open: true, message: 'password updated successfully'});
             await router.push('/login')
         }
         catch (error){
-            console.log(error)
+            console.error(error)
             toast.toastHandler({type: 'error', open: true, message: 'something went wrong'});
         }
     }

@@ -8,6 +8,7 @@ import InitalDataContext from '~/context/initial-data-context';
 
 export default function Home() {
     const [feeds, setFeeds] = useState<any>();
+    const {userData} = useContext(InitalDataContext);
     const [userLocation, setUserLocation] = useState<any>({});
     const {userData} = useContext(InitalDataContext);
     const [loading, setLoading] = useState<boolean>(false)
@@ -40,7 +41,6 @@ export default function Home() {
           <div className='scroll-container'>
               {loading && <Loading />}
               {!loading && feeds && feeds.filter((item: any) => item.user_id !== userData.id ).map((item: any) => {
-                console.log(item, '->', userData.id);
                 return(
                   <Fragment key={item.feed_id}>
                       <FeedCard {...item} self={false} />

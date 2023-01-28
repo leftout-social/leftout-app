@@ -3,23 +3,38 @@ import { useRouter } from 'next/router';
 import Toolbar from '~/components/Toolbar';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { useState, useEffect } from 'react';
-import { getFeedDetails } from '~/services/auth-service';
+import { getFeedDetails, getSpecificColumn } from '~/services/auth-service';
 import FeedCard from '~/modules/home/components/FeedCard';
 import { Loading } from '@nextui-org/react';
-
+import InstagramIcon from '@mui/icons-material/Instagram';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
 interface UserCardProps {
 	first_name: string;
 	gender: string;
 	current_age: string;
 	current_location: string;
 	insta_id: string;
+	id: string;
 }
 const UserCard = ({
 	first_name,
 	current_age,
 	gender,
 	current_location,
+	insta_id,
+	id,
 }: UserCardProps) => {
+	const onInstagramClick = () => window.open(`https://www.instagram.com/${insta_id}`);
+	const onEmailClick = async() => {
+		try {
+			const data = await getSpecificColumn(id, 'email');
+			const email = data.data[0].email;
+			window.location.href = `mailto:${email}?subject=Leftout trip`;
+		}
+		catch(error){
+			console.error(error);
+		}
+	}
 	return (
 		<UserCardContainer>
 			<ContentContainer>
@@ -40,6 +55,10 @@ const UserCard = ({
 						<span id='key'>Current location </span>
 						<span id='value'>{current_location}</span>
 					</div>
+				</Details>
+				<Details>
+					{insta_id && <InstagramIcon htmlColor='#7e33ca' onClick={onInstagramClick} />}
+					<ContactMailIcon htmlColor='#7e33ca' onClick={onEmailClick}/>
 				</Details>
 			</ContentContainer>
 		</UserCardContainer>
@@ -67,7 +86,6 @@ const FeedInformation = (props: any) => {
 	useEffect(() => {
 		(async () => await fetchFeedData())();
 	}, []);
-	console.log(feedInfo);
 	return (
 		<Parent>
 			{loading && <Loading />}

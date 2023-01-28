@@ -70,11 +70,41 @@ export const getReactionOnFeed = async(feedId: any, userId: any) => {
     })
     return response.status;
 }
+export const createPost = async(
+    userId:any, formState: any, latitude?: any, longitude?: any,
+) => {
+    const commute = formState.commute.toUpperCase();
+    const gender = formState.requiredGender.toUpperCase();
+    const response = await $axios.post(`${_apiBaseUrl}/feed`, {
+        user_id: userId,
+        travel_start_date: formState.fromDate,
+        travel_end_date: formState.toDate,
+        travel_medium: commute,
+        required_travellers: formState.groupSize,
+        required_travellers_gender: gender,
+        additional_description: formState.desc,
+        travelling_to_location: formState.location,
+        location_latitude: latitude,
+        location_longitude: longitude,
+    });
+    return response.data;
+}
 export const getFeedByProfile = async() => {
     const response = await $axios.get(`${_apiBaseUrl}/profile/feed`);
     return response.data;
 }
 export const getFeedDetails = async(id: any) => {
     const response = await $axios.get(`${_apiBaseUrl}/profile/feed/${id}`);
+    return response.data;
+}
+
+export const connectInstagramAccount = async(instaId: any) => {
+    const response = await $axios.put(`${_apiBaseUrl}/profile`, {
+        insta_id: instaId
+    })
+    return response.data;
+}
+export const getSpecificColumn = async(userId: any, columnName: any) => {
+    const response = await $axios.get(`${_apiBaseUrl}/profile/${userId}/${columnName}`);
     return response.data;
 }

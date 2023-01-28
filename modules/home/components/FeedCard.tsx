@@ -21,6 +21,7 @@ export interface FeedCardProps {
 	additional_description: string;
 	feed_id_activity: string;
 	self: boolean;
+	onClick?: () => void;
 	
 }
 const FeedCard = ({ ...props }: FeedCardProps) => {
@@ -31,7 +32,7 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 		setLoading(true);
 		try {
 			const response = await reactOnFeed(props.feed_id, userData.id);
-			console.log(response);
+
 			setInterested(true);
 			setLoading(false);
 		}
@@ -43,9 +44,8 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 	useEffect(() => {
 		props.feed_id_activity && setInterested(true);
 	}, [interested])
-	console.log('here -> ', props.feed_id_activity);
 	return (
-		<CardContainer>
+		<CardContainer onClick={props.onClick}>
 			{!props.self && <ProfileContainer position='top ' justifyContent='space-between'>
 				<div className='name-avatar'>
 					<img
@@ -101,7 +101,7 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 					<img src='/interested.svg' width={20} height={20} alt='in-icon' />
 					<span>Interested</span>
 				</div>}
-				{!loading && interested && <span id='sent'>Your trip joining interest has been sent!</span>}
+				{!loading && interested && <span id='sent'>Your interest request has been sent!</span>}
 			</ProfileContainer>}
 		</CardContainer>
 	);
@@ -167,8 +167,8 @@ const ProfileContainer = styled.div<{
 		font-size: 14px;
 		align-items: center;
 		border-radius: 4px;
-		background: #ebe6f3;
-		border: 1px solid #7e33ca;
+		// background: #ebe6f3;
+		// border: 1px solid #7e33ca;
 		cursor: pointer;
 	}
 `;
@@ -199,7 +199,7 @@ const Details = styled.div`
 const Dates = styled.div`
 	display: flex;
 	flex-direction: column;
-	gap: 6px;
+	gap: 2px;
 	align-items: center;
 	color: #7e33ca;
 `;
@@ -209,6 +209,7 @@ const DateContainer = styled.div`
 	align-items: center;
 	justify-content: center;
 	font-weight: 500;
+    font-size: 13px;
 	padding: 6px;
 	//   border: 1px solid #42C2FF;
 	color: black;
@@ -220,6 +221,6 @@ const Description = styled.div`
 	padding: 6px;
 	background: #ffffff;
 	//   border: 1px solid #7e33ca;
-    font-size: 14px;
+	font-size: 14px;
 	border-radius: 6px;
 `;

@@ -38,6 +38,7 @@ export default function App({Component, pageProps}: AppProps) {
         message: '',
     });
     const [openBottomDrawer, setOpenBottomDrawer] = useState<boolean>(false);
+    const [userLocation, setUserLocation] = useState<any>({});
     const fetchUserDetails = async () => {
         setLoading(true)
         try {
@@ -53,10 +54,6 @@ export default function App({Component, pageProps}: AppProps) {
         }
         setLoading(false)
     };
-    useEffect(() => {
-        requestInterceptor();
-        responseInterceptor();
-    }, []);
 
     useEffect(() => {
         (async () => {
@@ -70,6 +67,19 @@ export default function App({Component, pageProps}: AppProps) {
             toastHandler,
         },
     };
+    const successCallback = (position: any) => {
+        setUserLocation(position)
+    };
+    const errorCallback = (error: any) => {
+        setUserLocation({})
+    };
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    }, []);
+    useEffect(() => {
+        requestInterceptor();
+        responseInterceptor(toastHandler);
+    }, []);
     const openNewPostDrawer = () => setOpenBottomDrawer(true);
     const tabNotEligiblePath = ['/login', '/reset', '/onboarding', '/profile/feed'];
     return (
@@ -85,7 +95,10 @@ export default function App({Component, pageProps}: AppProps) {
                         <BottomDrawer id='post-drawer' open={openBottomDrawer}>
                             <CreatePost closeDrawer={() => {
                                 setOpenBottomDrawer(false);
-                            }}/>
+                            }}
+                            latitude={userLocation?.coords?.latitude || 20}
+                            longitude={ userLocation?.coords?.longitude || 70}
+                            />
                         </BottomDrawer>}
                 </Wrapper>
 
@@ -106,7 +119,6 @@ const Wrapper = styled.div`
   height: 100%;
   max-width: 900px;
   margin: 0 auto;
-  background: #ffffff;
 `;
 const NavContainer = styled.div`
   width: inherit;
