@@ -119,7 +119,6 @@ const Wrapper = styled.div`
   height: 100%;
   max-width: 900px;
   margin: 0 auto;
-  background: #ffffff;
 `;
 const NavContainer = styled.div`
   width: inherit;

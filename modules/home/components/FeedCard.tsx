@@ -21,6 +21,7 @@ export interface FeedCardProps {
 	additional_description: string;
 	feed_id_activity: string;
 	self: boolean;
+	onClick?: () => void;
 	
 }
 const FeedCard = ({ ...props }: FeedCardProps) => {
@@ -31,7 +32,7 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 		setLoading(true);
 		try {
 			const response = await reactOnFeed(props.feed_id, userData.id);
-			console.log(response);
+
 			setInterested(true);
 			setLoading(false);
 		}
@@ -43,9 +44,8 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 	useEffect(() => {
 		props.feed_id_activity && setInterested(true);
 	}, [interested])
-	console.log('here -> ', props.feed_id_activity);
 	return (
-		<CardContainer>
+		<CardContainer onClick={props.onClick}>
 			{!props.self && <ProfileContainer position='top ' justifyContent='space-between'>
 				<div className='name-avatar'>
 					<img

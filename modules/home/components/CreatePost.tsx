@@ -35,7 +35,6 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 	};
 
 	const handleGenderDropdown = (val: any) => {
-		console.log(val.currentKey);
 		setFormState({ ...formState, requiredGender: val.currentKey });
 	};
 
@@ -46,7 +45,6 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 	const handlePostOnClick = async () => {
 		try {
 			const response =  await createPost(userData.id, formState, latitude, longitude);
-            console.log("response", response);
 			closeDrawer();
 		} catch (err) {
 			console.error(err);

@@ -98,3 +98,14 @@ export const getFeedDetails = async(id: any) => {
     const response = await $axios.get(`${_apiBaseUrl}/profile/feed/${id}`);
     return response.data;
 }
+
+export const connectInstagramAccount = async(instaId: any) => {
+    const response = await $axios.put(`${_apiBaseUrl}/profile`, {
+        insta_id: instaId
+    })
+    return response.data;
+}
+export const getSpecificColumn = async(userId: any, columnName: any) => {
+    const response = await $axios.get(`${_apiBaseUrl}/profile/${userId}/${columnName}`);
+    return response.data;
+}

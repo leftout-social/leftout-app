@@ -39,6 +39,7 @@ const Profile = () => {
                     firstName={userData?.first_name}
                     lastName={userData?.last_name}
                     age={userData?.current_age}
+                    insta_id={userData?.insta_id}
                 />
             </div>
             <BottomDrawer id={'logout'} open={logout}>
@@ -54,16 +55,20 @@ const Profile = () => {
 const Parent = styled.div`
   height: 100%;
   width: 100%;
-  max-width: 850px;
-  margin: 0 auto;
   position: relative;
-
+  background: #ffffff;
   .fixed-header {
     position: fixed;
     width: 100%;
-    max-width: 850px;
+    max-width: 900px;
     margin: 0 auto;
     top: 0;
+    background: #ffffff;
+  }
+  .scroll-container {
+    width: inherit;
+    padding: 5rem 1rem 8rem 1rem;
+    background: #ffffff;
   }
 `;
 const DrawerParent = styled.div`
