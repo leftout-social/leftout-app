@@ -70,7 +70,6 @@ export const getReactionOnFeed = async(feedId: any, userId: any) => {
     })
     return response.status;
 }
-
 export const createPost = async(
     userId:any, formState: any, latitude?: any, longitude?: any,
 ) => {
