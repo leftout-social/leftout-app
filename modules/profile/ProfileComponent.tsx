@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { useEffect, useState, useRef } from 'react';
-import FeedCard from '../home/components/FeedCard';
 import React from 'react';
 import { useRouter } from 'next/router';
 import {
@@ -8,8 +7,6 @@ import {
 	getFeedByProfile,
 } from '~/services/auth-service';
 import FeedCard from '../home/components/FeedCard';
-import React from 'react';
-import { useRouter } from 'next/router';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import { BottomDrawer } from '~/components/BottomDrawer';
 import { Button, Loading, Input } from '@nextui-org/react';
