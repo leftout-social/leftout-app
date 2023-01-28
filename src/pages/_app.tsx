@@ -92,7 +92,7 @@ export default function App({Component, pageProps}: AppProps) {
                         <BottomNavbar openNewPostDrawer={openNewPostDrawer} />
                     </NavContainer>}
                     {!tabNotEligiblePath.includes(router.pathname) &&
-                        <BottomDrawer id='post-drawer' open={openBottomDrawer}>
+                        <BottomDrawer id='post-drawer' open={openBottomDrawer} onClose={() => setOpenBottomDrawer(false)}>
                             <CreatePost closeDrawer={() => {
                                 setOpenBottomDrawer(false);
                             }}

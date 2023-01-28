@@ -21,14 +21,13 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 		fromDate: dayjs().format('MM-DD-YYYY'),
 		toDate: dayjs().format('MM-DD-YYYY'),
 		location: 'Goa',
-		groupSize: '1',
+		groupSize: 1,
 		requiredGender: 'Male',
 		desc: '',
 		commute: 'Air',
 	});
 	const commuteTypes = ['Air', 'Train', 'Road', 'Air + Train', 'Road + Train', 'Misc'];
 	const genderTypes = ['Male', 'Female', 'Others', 'All'];
-	// const groupSizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
 	const handleDropdown = (val: any) => {
 		setFormState({ ...formState, commute: val.currentKey });
@@ -38,19 +37,19 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 		setFormState({ ...formState, requiredGender: val.currentKey });
 	};
 
-	// const handleGroupSizeDropdown = (val: any) => {
-	// 	setFormState({ ...formState, groupSize: val.currentKey });
-	// };
+    const handleDescChange = (event: any) => {
+        setFormState({...formState, desc: event.target.value});
+    }
 
 	const handlePostOnClick = async () => {
 		try {
 			const response =  await createPost(userData.id, formState, latitude, longitude);
+            console.log("response", response);
 			closeDrawer();
 		} catch (err) {
 			console.error(err);
 		}
 	};
-
 	return (
 		<Parent>
 			<NavBarContainer>
@@ -90,25 +89,6 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 				className='text-field'
 				type='number'
 			/>
-
-			{/* <p className='commute'>Group Size</p>
-			<Dropdown>
-				<Dropdown.Button flat color='secondary'>
-					{formState.groupSize}
-				</Dropdown.Button>
-				<Dropdown.Menu
-					aria-label='Single selection actions'
-					color='secondary'
-					selectionMode='single'
-					selectedKeys={formState.groupSize}
-					onSelectionChange={(val) => handleGroupSizeDropdown(val)}
-				>
-					{groupSizes.map((size) => (
-						<Dropdown.Item key={`${size}`}>{size}</Dropdown.Item>
-					))}
-				</Dropdown.Menu>
-			</Dropdown> */}
-
 			<p className='commute'>Required Travellers Gender</p>
 			<Dropdown>
 				<Dropdown.Button flat color='secondary'>
@@ -132,6 +112,7 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 				status='secondary'
 				css={{ color: 'black' }}
 				maxLength={80}
+        onChange={(event) => handleDescChange(event)}
 			/>
 
 			<p className='commute'>Commute</p>

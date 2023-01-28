@@ -1,5 +1,8 @@
 import styled from 'styled-components';
 import { useEffect, useState, useRef } from 'react';
+import FeedCard from '../home/components/FeedCard';
+import React from 'react';
+import { useRouter } from 'next/router';
 import {
 	connectInstagramAccount,
 	getFeedByProfile,
@@ -31,6 +34,7 @@ const ProfileComponent = ({
 	const [tab, setTab] = useState<number>(1);
 	const inputFile = useRef<HTMLInputElement>(null);
 	const [feeds, setFeeds] = useState<any>([]);
+    const [profilePhoto, setProfilePhoto] = useState('/cardImage/beach-1.jpg');
 	const [instaId, setInstaId] = useState<string>('');
 	const [instaIdDrawer, setInstaIdDrawer] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -42,6 +46,12 @@ const ProfileComponent = ({
 			console.error(err);
 		}
 	};
+
+    const uploadProfilePhoto = (event: any) => {
+        if(event.target.files[0]) {
+            setProfilePhoto(URL.createObjectURL(event.target.files[0]));
+        }
+    }
 	useEffect(() => {
 		(async () => await fetchFeeds())();
 	}, []);
@@ -71,21 +81,22 @@ const ProfileComponent = ({
 	};
 	return (
 		<ProfileContainer>
-			<img
+			  <img
 				src='/images/top-onboarding.jpg'
 				width='100%'
 				height={180}
 				className='image-container'
 			/>
 			<div className='profile-image-container'>
-				<input
+				 <input
 					type='file'
 					id='imgupload'
 					style={{ display: 'none' }}
 					ref={inputFile}
+         onChange={(event) => uploadProfilePhoto(event)}
 				/>
 				<img
-					src='/cardImage/beach-1.jpg'
+					src={profilePhoto}
 					width={100}
 					height={100}
 					className='profile-image'
@@ -105,17 +116,19 @@ const ProfileComponent = ({
 				</div>
 			</UserDetails>
 
+             
 			<TabContainer>
-				<TabValue setTab={tab} currTab={1} onClick={() => setTab(1)}>
-					<b>{feeds?.length}</b> Trip Posts
-				</TabValue>
-			</TabContainer>
+                <TabValue setTab={tab} currTab={1} onClick={() => setTab(1)}>
+                    <b>{feeds?.length}</b> Trip Posts
+                </TabValue>
+            </TabContainer>
 			<FeedContainer>
 				{feeds?.map((item: any) => (
 					<FeedCard
 						{...item}
 						self={true}
 						key={item.feed_id}
+            borderRadius
 						onClick={() => onCardClick(item.feed_id)}
 					/>
 				))}
@@ -152,7 +165,9 @@ const ProfileComponent = ({
 
 export default ProfileComponent;
 
-const ProfileContainer = styled.div`
+const ProfileContainer = styled.div<{
+    external?: boolean
+}>`
 	height: 100%;
 	width: 100%;
 	box-sizing: border-box;
@@ -173,10 +188,21 @@ const ProfileContainer = styled.div`
 		text-align: left;
 		width: 100%;
 	}
+	.scroll-container {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		padding: 0 2rem 2rem 2rem;
+	}
+
+    .profile-image-container {
+        position: relative;
+        top: -70px;
+    }
 	.profile-image {
+        
 		border-radius: 50%;
 		padding: 5px;
-		margin-top: -70px;
 		background: white;
 	}
 `;
@@ -190,7 +216,8 @@ const UserDetails = styled.div`
 	font-size: 20px;
 	line-height: 120%;
 	text-align: center;
-
+    position: relative;
+    top: -70px;
 	.sub-details {
 		display: flex;
 		justify-content: center;
@@ -205,9 +232,11 @@ const UserDetails = styled.div`
 
 const TabContainer = styled.div`
 	display: flex;
-	padding: 0 8px;
+	padding: 0 12px;
 	width: inherit;
 	margin-top: 20px;
+    position: relative;
+    top: -70px;
 `;
 
 const TabValue = styled.span<{
@@ -218,13 +247,14 @@ const TabValue = styled.span<{
 	display: flex;
 	gap: 6px;
 	font-size: 16px;
+    font-weight: 500;
 	color: #7e33ca;
 	justify-content: center;
 	align-items: center;
 	padding: 8px 0;
 	border-radius: 6px;
 	background: ${(props) =>
-		props.setTab === props.currTab ? `#F1F1FE` : '#FFFFFF'};
+		props.setTab === props.currTab ? `#ebe6f3;` : '#FFFFFF'};
 `;
 
 const FeedContainer = styled.div`
@@ -236,6 +266,7 @@ const FeedContainer = styled.div`
 `;
 const DrawerParent = styled.div`
 	display: flex;
+    width: 100%;
 	flex-direction: column;
 	gap: 1rem;
 	padding: 2rem;

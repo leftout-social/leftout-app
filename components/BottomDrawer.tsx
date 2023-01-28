@@ -20,10 +20,8 @@ export const BottomDrawer = ({ ...props }: BottomDrawerProps) => {
     };
     useEffect(() => {
         if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-            // true for mobile device
             setIsMobile(true)
         }else{
-            // false for not mobile device
             setIsMobile(false);
         }
     }, [])

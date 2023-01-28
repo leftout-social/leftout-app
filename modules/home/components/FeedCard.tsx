@@ -4,6 +4,8 @@ import {reactOnFeed} from '../../../services/auth-service';
 import { useContext, useEffect, useState } from 'react';
 import InitalDataContext from '~/context/initial-data-context';
 import { Loading } from '@nextui-org/react';
+import { BottomDrawer } from '~/components/BottomDrawer';
+import ProfileComponent from '~/modules/profile/ProfileComponent';
 export interface FeedCardProps {
 	profileImage: string;
 	first_name: string;
@@ -21,6 +23,7 @@ export interface FeedCardProps {
 	additional_description: string;
 	feed_id_activity: string;
 	self: boolean;
+    borderRadius?: boolean;
 	onClick?: () => void;
 	
 }
@@ -58,7 +61,7 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 				</div>
 				<span className='time'>{dayjs(props.created_at).format('MMM DD')}</span>
 			</ProfileContainer>}
-			<ContentContainer>
+			<ContentContainer borderRadius={props.borderRadius}>
 				<Details>
 					<div className='items'>
 						<span id='key'>Trip to : </span>
@@ -103,6 +106,7 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 				</div>}
 				{!loading && interested && <span id='sent'>Your interest request has been sent!</span>}
 			</ProfileContainer>}
+           
 		</CardContainer>
 	);
 };
@@ -173,12 +177,15 @@ const ProfileContainer = styled.div<{
 	}
 `;
 
-const ContentContainer = styled.div`
+const ContentContainer = styled.div<{
+    borderRadius?: boolean
+}>`
 	display: flex;
 	justify-content: space-between;
 	width: inherit;
 	background: #ebe6f3;
 	padding: 10px 14px;
+    border-radius: ${props => props.borderRadius ? '8px' : 0}
 `;
 
 const Details = styled.div`
