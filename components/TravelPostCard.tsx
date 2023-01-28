@@ -19,7 +19,6 @@ const TravelPostCard = ({id, name, goingTo, travelMedium, goingOnDate, intereste
     tag,tripStartDate, tripEndDate, self,
                         }: TravelPostCardProps) => {
     const getTagBackground = tagBackgroundFinder(tag)
-    console.log(getTagBackground)
     return (
         <TravelPostContainer backgroundImage={getTagBackground} tags={tag}>
             <div className='header'>

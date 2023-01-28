@@ -28,14 +28,12 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 	});
 	const commuteTypes = ['Air', 'Train', 'Road', 'Air + Train', 'Road + Train', 'Misc'];
 	const genderTypes = ['Male', 'Female', 'Others', 'All'];
-	// const groupSizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
 	const handleDropdown = (val: any) => {
 		setFormState({ ...formState, commute: val.currentKey });
 	};
 
 	const handleGenderDropdown = (val: any) => {
-		console.log(val.currentKey);
 		setFormState({ ...formState, requiredGender: val.currentKey });
 	};
 
@@ -52,7 +50,6 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 			console.error(err);
 		}
 	};
-
 	return (
 		<Parent>
 			<NavBarContainer>
@@ -92,7 +89,6 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 				className='text-field'
 				type='number'
 			/>
-
 			<p className='commute'>Required Travellers Gender</p>
 			<Dropdown>
 				<Dropdown.Button flat color='secondary'>
@@ -116,7 +112,7 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 				status='secondary'
 				css={{ color: 'black' }}
 				maxLength={80}
-                onChange={(event) => handleDescChange(event)}
+        onChange={(event) => handleDescChange(event)}
 			/>
 
 			<p className='commute'>Commute</p>

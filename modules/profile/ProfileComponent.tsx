@@ -1,15 +1,25 @@
 import styled from 'styled-components';
 import { useEffect, useState, useRef } from 'react';
-import { getFeedByProfile } from '~/services/auth-service';
 import FeedCard from '../home/components/FeedCard';
 import React from 'react';
 import { useRouter } from 'next/router';
+import {
+	connectInstagramAccount,
+	getFeedByProfile,
+} from '~/services/auth-service';
+import FeedCard from '../home/components/FeedCard';
+import React from 'react';
+import { useRouter } from 'next/router';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import { BottomDrawer } from '~/components/BottomDrawer';
+import { Button, Loading, Input } from '@nextui-org/react';
 interface ProfileComponentProps {
 	firstName: string;
 	lastName: string;
 	age: string;
 	gender: string;
 	currentCity: string;
+	insta_id: string;
 }
 
 const ProfileComponent = ({
@@ -18,12 +28,16 @@ const ProfileComponent = ({
 	age,
 	gender,
 	currentCity,
+	insta_id,
 }: ProfileComponentProps) => {
 	const router = useRouter();
 	const [tab, setTab] = useState<number>(1);
 	const inputFile = useRef<HTMLInputElement>(null);
 	const [feeds, setFeeds] = useState<any>([]);
     const [profilePhoto, setProfilePhoto] = useState('/cardImage/beach-1.jpg');
+	const [instaId, setInstaId] = useState<string>('');
+	const [instaIdDrawer, setInstaIdDrawer] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 	const fetchFeeds = async () => {
 		try {
 			const data = await getFeedByProfile();
@@ -44,10 +58,27 @@ const ProfileComponent = ({
 	const onCardClick = (id: any) => {
 		router.push(`/profile/feed?feed_id=${id}`);
 	};
-
-    console.log("profile", profilePhoto);
 	//@ts-ignore
 	const onImageClick = () => inputFile?.current?.click();
+	const connectInstaAccount = async () => {
+		setLoading(true);
+		try {
+			const data = await connectInstagramAccount(instaId);
+			setInstaIdDrawer(false);
+			setLoading(false);
+			window.location.reload();
+		} catch (error) {
+			console.error(error);
+			setLoading(false);
+		}
+	};
+	const onInstagramClick = () => {
+		if (!insta_id) {
+			setInstaIdDrawer(true);
+			return;
+		}
+		window.open(`https://www.instagram.com/${insta_id}`)
+	};
 	return (
 		<ProfileContainer>
 			  <img
@@ -62,7 +93,7 @@ const ProfileComponent = ({
 					id='imgupload'
 					style={{ display: 'none' }}
 					ref={inputFile}
-                    onChange={(event) => uploadProfilePhoto(event)}
+         onChange={(event) => uploadProfilePhoto(event)}
 				/>
 				<img
 					src={profilePhoto}
@@ -77,7 +108,11 @@ const ProfileComponent = ({
 				<div className='sub-details'>
 					<span>{`${age},`}</span>
 					<span>{`${gender},`}</span>
-					<span>{`${currentCity}`}</span>
+					<span>{`${currentCity},`}</span>
+					<InstagramIcon
+						htmlColor={insta_id && '#7e33ca'}
+						onClick={onInstagramClick}
+					/>
 				</div>
 			</UserDetails>
 
@@ -86,18 +121,44 @@ const ProfileComponent = ({
                 <TabValue setTab={tab} currTab={1} onClick={() => setTab(1)}>
                     <b>{feeds?.length}</b> Trip Posts
                 </TabValue>
-                {/* <TabValue setTab={tab} currTab={2} onClick={() => setTab(2)}>
-        <b>150</b> Interested
-    </TabValue> */}
             </TabContainer>
-            <FeedContainer>
-                    {feeds?.map((item: any) => (
-                        <div key={item.feed_id} className='feed-card' onClick={() => onCardClick(item.feed_id)}>
-                            <FeedCard {...item} borderRadius self={true} />
-                        </div>
-                    ))}
-            </FeedContainer>
-            
+			<FeedContainer>
+				{feeds?.map((item: any) => (
+					<FeedCard
+						{...item}
+						self={true}
+						key={item.feed_id}
+            borderRadius
+						onClick={() => onCardClick(item.feed_id)}
+					/>
+				))}
+			</FeedContainer>
+			<BottomDrawer
+				id='instaId-drawer'
+				open={instaIdDrawer}
+				onClose={() => setInstaIdDrawer(false)}
+			>
+				<DrawerParent>
+					<Input
+						value={instaId}
+						placeholder='instagram account'
+						onChange={(event) => setInstaId(event.target.value)}
+						className='input'
+						size='lg'
+						labelLeft='@'
+					/>
+					{!loading && (
+						<Button
+							onClick={connectInstaAccount}
+							className='button'
+							disabled={instaId.length <= 2}
+						>
+							CONNECT
+						</Button>
+					)}
+					{loading && <Loading />}
+				</DrawerParent>
+			</BottomDrawer>
 		</ProfileContainer>
 	);
 };
@@ -115,7 +176,6 @@ const ProfileContainer = styled.div<{
 	gap: 1rem;
 	align-items: center;
 	background: #ffffff;
-
 	span {
 		@media (min-width: 500px) {
 			font-size: 20px;
@@ -128,7 +188,6 @@ const ProfileContainer = styled.div<{
 		text-align: left;
 		width: 100%;
 	}
-
 	.scroll-container {
 		display: flex;
 		flex-direction: column;
@@ -144,8 +203,6 @@ const ProfileContainer = styled.div<{
         
 		border-radius: 50%;
 		padding: 5px;
-		
-        // top: ${props => !props.external ? '-70px' : '20px'}
 		background: white;
 	}
 `;
@@ -201,16 +258,28 @@ const TabValue = styled.span<{
 `;
 
 const FeedContainer = styled.div`
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	height: 100%;
+`;
+const DrawerParent = styled.div`
 	display: flex;
     width: 100%;
 	flex-direction: column;
 	gap: 1rem;
-	padding: 1.5rem 1rem 8rem 1rem;
-    position: relative;
-    top: -70px;
-    .feed-card {
-        width: 100%;
-        // padding: 0 10px;
-        border-radius: 12px;
-    }
+	padding: 2rem;
+	position: relative;
+	height: 50%;
+	.close-icon {
+		position: absolute;
+		right: 2rem;
+		top: 0;
+		cursor: pointer;
+	}
+	.input {
+		height: 60px;
+		font-size: 18px;
+	}
 `;

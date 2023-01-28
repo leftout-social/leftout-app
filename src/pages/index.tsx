@@ -40,7 +40,6 @@ export default function Home() {
           <div className='scroll-container'>
               {loading && <Loading />}
               {!loading && feeds && feeds.filter((item: any) => item.user_id !== userData.id ).map((item: any) => {
-                console.log(item, '->', userData.id);
                 return(
                   <Fragment key={item.feed_id}>
                       <FeedCard {...item} self={false} />
