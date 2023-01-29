@@ -11,7 +11,7 @@ interface DateRangeProps {
 }
 
 export default function DateRangePicker({type}: DateRangeProps) {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

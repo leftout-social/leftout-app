@@ -31,7 +31,7 @@ const ProfileComponent = ({
 	const [tab, setTab] = useState<number>(1);
 	const inputFile = useRef<HTMLInputElement>(null);
 	const [feeds, setFeeds] = useState<any>([]);
-    const [profilePhoto, setProfilePhoto] = useState('/cardImage/beach-1.jpg');
+	const [profilePhoto, setProfilePhoto] = useState('/cardImage/beach-1.jpg');
 	const [instaId, setInstaId] = useState<string>('');
 	const [instaIdDrawer, setInstaIdDrawer] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -44,11 +44,11 @@ const ProfileComponent = ({
 		}
 	};
 
-    const uploadProfilePhoto = (event: any) => {
-        if(event.target.files[0]) {
-            setProfilePhoto(URL.createObjectURL(event.target.files[0]));
-        }
-    }
+	const uploadProfilePhoto = (event: any) => {
+		if (event.target.files[0]) {
+			setProfilePhoto(URL.createObjectURL(event.target.files[0]));
+		}
+	};
 	useEffect(() => {
 		(async () => await fetchFeeds())();
 	}, []);
@@ -74,23 +74,23 @@ const ProfileComponent = ({
 			setInstaIdDrawer(true);
 			return;
 		}
-		window.open(`https://www.instagram.com/${insta_id}`)
+		window.open(`https://www.instagram.com/${insta_id}`);
 	};
 	return (
 		<ProfileContainer>
-			  <img
+			<img
 				src='/images/top-onboarding.jpg'
 				width='100%'
 				height={180}
 				className='image-container'
 			/>
 			<div className='profile-image-container'>
-				 <input
+				<input
 					type='file'
 					id='imgupload'
 					style={{ display: 'none' }}
 					ref={inputFile}
-         onChange={(event) => uploadProfilePhoto(event)}
+					onChange={(event) => uploadProfilePhoto(event)}
 				/>
 				<img
 					src={profilePhoto}
@@ -113,19 +113,18 @@ const ProfileComponent = ({
 				</div>
 			</UserDetails>
 
-             
 			<TabContainer>
-                <TabValue setTab={tab} currTab={1} onClick={() => setTab(1)}>
-                    <b>{feeds?.length}</b> Trip Posts
-                </TabValue>
-            </TabContainer>
+				<TabValue setTab={tab} currTab={1} onClick={() => setTab(1)}>
+					<b>{feeds?.length}</b> Trip Posts
+				</TabValue>
+			</TabContainer>
 			<FeedContainer>
 				{feeds?.map((item: any) => (
 					<FeedCard
 						{...item}
 						self={true}
 						key={item.feed_id}
-            borderRadius
+						borderRadius
 						onClick={() => onCardClick(item.feed_id)}
 					/>
 				))}
@@ -163,7 +162,7 @@ const ProfileComponent = ({
 export default ProfileComponent;
 
 const ProfileContainer = styled.div<{
-    external?: boolean
+	external?: boolean;
 }>`
 	height: 100%;
 	width: 100%;
@@ -192,12 +191,11 @@ const ProfileContainer = styled.div<{
 		padding: 0 2rem 2rem 2rem;
 	}
 
-    .profile-image-container {
-        position: relative;
-        top: -70px;
-    }
+	.profile-image-container {
+		position: relative;
+		top: -70px;
+	}
 	.profile-image {
-        
 		border-radius: 50%;
 		padding: 5px;
 		background: white;
@@ -213,8 +211,8 @@ const UserDetails = styled.div`
 	font-size: 20px;
 	line-height: 120%;
 	text-align: center;
-    position: relative;
-    top: -70px;
+	position: relative;
+	top: -70px;
 	.sub-details {
 		display: flex;
 		justify-content: center;
@@ -232,8 +230,8 @@ const TabContainer = styled.div`
 	padding: 0 12px;
 	width: inherit;
 	margin-top: 20px;
-    position: relative;
-    top: -70px;
+	position: relative;
+	top: -70px;
 `;
 
 const TabValue = styled.span<{
@@ -244,7 +242,7 @@ const TabValue = styled.span<{
 	display: flex;
 	gap: 6px;
 	font-size: 16px;
-    font-weight: 500;
+	font-weight: 500;
 	color: #7e33ca;
 	justify-content: center;
 	align-items: center;
@@ -263,7 +261,7 @@ const FeedContainer = styled.div`
 `;
 const DrawerParent = styled.div`
 	display: flex;
-    width: 100%;
+	width: 100%;
 	flex-direction: column;
 	gap: 1rem;
 	padding: 2rem;

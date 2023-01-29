@@ -33,9 +33,9 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const onInterestedClick = async() => {
 		setLoading(true);
+		console.log('triggered')
 		try {
-			const response = await reactOnFeed(props.feed_id, userData.id);
-
+			await reactOnFeed(props.feed_id, userData.id, props.user_id);
 			setInterested(true);
 			setLoading(false);
 		}
@@ -48,7 +48,7 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 		props.feed_id_activity && setInterested(true);
 	}, [interested])
 	return (
-		<CardContainer onClick={props.onClick}>
+		<CardContainer onClick={props.onClick} self={props.self}>
 			{!props.self && <ProfileContainer position='top ' justifyContent='space-between'>
 				<div className='name-avatar'>
 					<img
@@ -112,10 +112,11 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 };
 export default FeedCard;
 
-const CardContainer = styled.div`
+const CardContainer = styled.div<{self: boolean}>`
 	display: flex;
 	flex-direction: column;
 	width: inherit;
+	cursor: ${(props) => props.self && 'pointer'};
 `;
 
 const ProfileContainer = styled.div<{
@@ -128,8 +129,6 @@ const ProfileContainer = styled.div<{
 	height: 45px;
 	background: #ffffff;
 	padding: 10px 14px;
-	border-radius: ${(props) =>
-		props.position === 'top' ? '8px 8px 0 0' : '0 0 8px 8px'};
 	.name-avatar {
 		display: flex;
 		gap: 8px;

@@ -57,9 +57,10 @@ export const getAllFeeds = async(lat: any, long: any, pageNo: any = 1, pageSize:
     return response.data;
 }
 
-export const reactOnFeed = async(feedId: any, userId: any) => {
+export const reactOnFeed = async(feedId: any, userId: any, sourceId:any) => {
     const response = await $axios.post(`${_apiBaseUrl}/feed/activity/${feedId}`, {
-        user_id: userId
+        user_id: userId,
+        source_id:sourceId,
     })
     return response.data;
 } 
@@ -107,4 +108,9 @@ export const connectInstagramAccount = async(instaId: any) => {
 export const getSpecificColumn = async(userId: any, columnName: any) => {
     const response = await $axios.get(`${_apiBaseUrl}/profile/${userId}/${columnName}`);
     return response.data;
+}
+export const getUpdates = async(userId: any) => {
+    const response = await $axios.get(`${_apiBaseUrl}/notification/${userId}`);
+    return response.data;
+
 }

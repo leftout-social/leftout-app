@@ -4,6 +4,7 @@ import {useRouter} from "next/router";
 
 interface BottomTabsProps {
     openNewPostDrawer: () => void;
+    position: 'BOTTOM' | 'LEFT';
 }
 export type TABS_ENTITY = {
     id: number;
@@ -12,7 +13,7 @@ export type TABS_ENTITY = {
     title: string;
     path?: string;
 }
-const BottomNavbar = ({openNewPostDrawer}:BottomTabsProps) => {
+const BottomNavbar = ({openNewPostDrawer, position}:BottomTabsProps) => {
     const router = useRouter();
     const path = router.pathname;
     const [currentTab, setCurrentTab] = useState<number>(1);
@@ -42,7 +43,7 @@ const BottomNavbar = ({openNewPostDrawer}:BottomTabsProps) => {
             inActiveIcon: '/nav/inactive-notification.svg',
             activeIcon: '/nav/active-notification.svg',
             title: 'Home',
-            path: '/',
+            path: '/notification',
         },
         {
             id: 5,
@@ -72,7 +73,7 @@ const BottomNavbar = ({openNewPostDrawer}:BottomTabsProps) => {
         setCurrentTab(currpath as number);
     }, [path])
     return (
-        <NavigationContainer>
+        <NavigationContainer position={position}>
             {tabs.map(({id, inActiveIcon, activeIcon, title, path}) => {
                 return (
                     <Fragment key={id}>
@@ -89,9 +90,10 @@ const BottomNavbar = ({openNewPostDrawer}:BottomTabsProps) => {
 }
 export default BottomNavbar;
 
-const NavigationContainer = styled.div`
+const NavigationContainer = styled.div<{position: 'BOTTOM' | 'LEFT'}>`
   display: flex;
   justify-content: space-between;
+  flex-direction: ${(props) => props.position === 'LEFT' ? 'column' : 'row'};
   gap: 2rem;
   align-items: center;
   padding: 1rem;

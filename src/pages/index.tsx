@@ -2,8 +2,8 @@
 import styled from 'styled-components';
 import {Fragment, useContext, useEffect, useState} from 'react';
 import {getAllFeeds} from "~/services/auth-service";
+import { Loading } from '@nextui-org/react';
 import FeedCard from "~/modules/home/components/FeedCard";
-import Loading from "~/components/Loading";
 import InitalDataContext from '~/context/initial-data-context';
 
 export default function Home() {
@@ -38,7 +38,7 @@ export default function Home() {
     return (
         <Parent>
           <div className='scroll-container'>
-              {loading && <Loading />}
+              {loading && <Loading size='xl' />}
               {!loading && feeds && feeds.filter((item: any) => item.user_id !== userData.id ).map((item: any) => {
                 return(
                   <Fragment key={item.feed_id}>
@@ -58,20 +58,15 @@ const Parent = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding: 1.5rem 1rem 8rem 1rem;
+    @media (min-width: 700px){
+        padding: 7rem 1rem 2rem 1rem;
+    }
+    @media(max-width: 700px){
+        padding: 2rem 1rem 7rem 1rem;
+    }
+  
     background:  #F6F7F9;
   }
-
-  //
-  //.fixed-header {
-  //  position: fixed;
-  //  width: 100%;
-  //  max-width: 850px;
-  //  margin: 0 auto;
-  //  top: 0;
-  //  z-index: 20;
-  //}
-
   .add {
     position: sticky;
     display: flex;

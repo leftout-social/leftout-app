@@ -41,15 +41,12 @@ const Profile = () => {
                     insta_id={userData?.insta_id}
                 />
             </div>
-            <div className='bottom-drawer'>
                 <BottomDrawer id='logout' open={logout}>
                     <DrawerParent>
                         <Button onClick={() => setLogout(false)} className='cancel'>Cancel</Button>
                         <Button onClick={confirmLogout} className='confirm'>Logout</Button>
                     </DrawerParent>
                 </BottomDrawer>
-            </div>
-           
         </Parent>
     );
 };
@@ -66,18 +63,15 @@ const Parent = styled.div`
     margin: 0 auto;
     top: 0;
     background: #ffffff;
+    z-index: 100;
+    @media(min-width: 700px){
+        display: none;
+    }
   }
   .scroll-container {
     width: inherit;
-    padding: 5rem 1rem 8rem 1rem;
+    padding: 4rem 1rem 8rem 1rem;
     background: #ffffff;
-  }
-  .bottom-drawer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
   }
 `;
 const DrawerParent = styled.div`

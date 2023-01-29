@@ -1,7 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie';
 import { ToastItem } from "~/components/Toast";
-let token = Cookies.get('leftout-login');
 const $axios = axios.create({
     timeout: 10000,
     headers: {
@@ -16,6 +15,7 @@ const $axios = axios.create({
 // });
 
 export const requestInterceptor = () => {
+    let token = localStorage.getItem('leftout-login');
     $axios.interceptors.request.use((request) => {
         const bearerToken = `Bearer ${token}`;
         request.headers = {

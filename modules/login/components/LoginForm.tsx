@@ -22,6 +22,7 @@ const LoginForm = () => {
 			try {
 				const response = await login(formState)
                 await Cookies.set('leftout-login', response.jwt_token);
+				await localStorage.setItem('leftout-login', response.jwt_token);
 				await localStorage.setItem('leftout-id', response.user_id)
 				if(response.user_data.length === 1) return window.location.href = '/'
 				await router.push(`/onboarding?id=${response.user_id}`);
@@ -74,6 +75,7 @@ const LoginForm = () => {
 				}
 				className='input'
 				size='lg'
+				type="email"
 			/>
 			<Input
 				value={formState.password}
