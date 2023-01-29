@@ -112,7 +112,7 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 				status='secondary'
 				css={{ color: 'black' }}
 				maxLength={80}
-        onChange={(event) => handleDescChange(event)}
+                onChange={(event) => handleDescChange(event)}
 			/>
 
 			<p className='commute'>Commute</p>

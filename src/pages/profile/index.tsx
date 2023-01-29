@@ -7,9 +7,11 @@ import InitalDataContext from '~/context/initial-data-context';
 import Cookies from "js-cookie";
 import {BottomDrawer} from "~/components/BottomDrawer";
 import {Button} from "@nextui-org/react";
+import EditProfile from '~/modules/profile/EditProfile';
 
 const Profile = () => {
     const [logout, setLogout] = useState<boolean>(false);
+    const [openEditBottomDrawer, setOpenEditBottomDrawer] = useState<boolean>(false);
     const {userData} = useContext(InitalDataContext);
     const onLogoutClick = async () => {
         setLogout(true);
@@ -19,14 +21,12 @@ const Profile = () => {
         await Cookies.remove('leftout-login');
         window.location.href = '/login';
     }
-    const editProfile = () => {
-        console.log('edit triggered')
-    }
+
     return (
         <Parent>
             <div className='fixed-header'>
                 <Toolbar
-                    onLeftButtonClick={editProfile}
+                    onLeftButtonClick={() => setOpenEditBottomDrawer(true)}
                     onRightButtonClick={onLogoutClick}
                     rightButtonJSX={<LogoutIcon color='error'/>}
                 />
@@ -39,6 +39,7 @@ const Profile = () => {
                     lastName={userData?.last_name}
                     age={userData?.current_age}
                     insta_id={userData?.insta_id}
+                    bio={userData?.user_bio}
                 />
             </div>
                 <BottomDrawer id='logout' open={logout}>
@@ -46,6 +47,9 @@ const Profile = () => {
                         <Button onClick={() => setLogout(false)} className='cancel'>Cancel</Button>
                         <Button onClick={confirmLogout} className='confirm'>Logout</Button>
                     </DrawerParent>
+                </BottomDrawer>
+                <BottomDrawer id='profile-preview' open={openEditBottomDrawer} onClose={() => setOpenEditBottomDrawer(false)}>
+                    <EditProfile closeDrawer={() => setOpenEditBottomDrawer(false)}/>
                 </BottomDrawer>
         </Parent>
     );

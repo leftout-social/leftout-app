@@ -17,6 +17,7 @@ interface ProfileComponentProps {
 	gender: string;
 	currentCity: string;
 	insta_id: string;
+    bio?:string;
 }
 
 const ProfileComponent = ({
@@ -26,6 +27,7 @@ const ProfileComponent = ({
 	gender,
 	currentCity,
 	insta_id,
+    bio
 }: ProfileComponentProps) => {
 	const router = useRouter();
 	const [tab, setTab] = useState<number>(1);
@@ -105,12 +107,15 @@ const ProfileComponent = ({
 				<div className='sub-details'>
 					<span>{`${age},`}</span>
 					<span>{`${gender},`}</span>
-					<span>{`${currentCity},`}</span>
+					<span>{`${currentCity}`}</span>
 					<InstagramIcon
 						htmlColor={insta_id && '#7e33ca'}
 						onClick={onInstagramClick}
 					/>
 				</div>
+                <span className='bio'>
+                    {bio}
+                </span>
 			</UserDetails>
 
 			<TabContainer>
@@ -223,11 +228,15 @@ const UserDetails = styled.div`
 		line-height: 150%;
 		color: #8f90a7;
 	}
+    .bio {
+        margin-top: 10px;
+        font-size: 14px;
+        padding: 0 8px;
+    }
 `;
 
 const TabContainer = styled.div`
 	display: flex;
-	padding: 0 12px;
 	width: inherit;
 	margin-top: 20px;
 	position: relative;
@@ -258,6 +267,8 @@ const FeedContainer = styled.div`
 	flex-direction: column;
 	gap: 1rem;
 	height: 100%;
+    position: relative;
+	top: -30px;
 `;
 const DrawerParent = styled.div`
 	display: flex;
