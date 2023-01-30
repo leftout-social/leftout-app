@@ -10,6 +10,7 @@ import FeedCard from '../home/components/FeedCard';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import { BottomDrawer } from '~/components/BottomDrawer';
 import { Button, Loading, Input } from '@nextui-org/react';
+import ImageKit from 'imagekit';
 interface ProfileComponentProps {
 	firstName: string;
 	lastName: string;
@@ -46,10 +47,23 @@ const ProfileComponent = ({
 		}
 	};
 
+    const imageKit = new ImageKit({
+        publicKey: 'public_pim8PZbmU7YcB5ph4pUaxRNixRU=',
+        privateKey: 'private_vVDfx9DE4P6LCFtOYx0cCwOUwDc=',
+        urlEndpoint: 'https://ik.imagekit.io/xqcsnvb2o/leftout'
+    });
+
 	const uploadProfilePhoto = (event: any) => {
 		if (event.target.files[0]) {
 			setProfilePhoto(URL.createObjectURL(event.target.files[0]));
 		}
+
+        imageKit.upload({
+            file: event.target.files[0],
+            fileName: `${firstName}_${lastName}`
+        }, function(err, result) {
+            // console.log("arguments", arguments);
+        });
 	};
 	useEffect(() => {
 		(async () => await fetchFeeds())();
