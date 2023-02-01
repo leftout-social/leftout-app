@@ -106,8 +106,9 @@ export const connectInstagramAccount = async(userDetails: any) => {
         current_age: userDetails.age,
         gender: userDetails.gender,
         current_location: userDetails.currentCity,
-        insta_id: userDetails.insta_id,
-        user_bio: userDetails.bio
+        insta_id: userDetails.instaId,
+        user_bio: userDetails.bio,
+        profile_image_url: userDetails.profile_image_url || ''
     })
     return response.data;
 }
@@ -119,4 +120,8 @@ export const getUpdates = async(userId: any) => {
     const response = await $axios.get(`${_apiBaseUrl}/notification/${userId}`);
     return response.data;
 
+}
+export const verifyEmail = async(token: any) => {
+    const response = await axios.post(`${_apiBaseUrl}/verify/email?token=${token}`);
+    return response.status;
 }

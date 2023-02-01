@@ -25,7 +25,7 @@ const LoginForm = () => {
 				await localStorage.setItem('leftout-login', response.jwt_token);
 				await localStorage.setItem('leftout-id', response.user_id)
 				if(response.user_data.length === 1) return window.location.href = '/'
-				await router.push(`/onboarding?id=${response.user_id}`);
+				window.location.href = `/onboarding?id=${response.user_id}`;
 			}
 			catch (e){
 				console.error(e)
@@ -36,7 +36,7 @@ const LoginForm = () => {
 		else {
 			try {
 				await signup(formState)
-				toast.toastHandler({type: 'info', message: 'successfully signed up, now you can login', open: true})
+				toast.toastHandler({type: 'info', message: 'Verfication mail has been sent your email, please verify', open: true})
 				setLoginState('LOGIN');
 			}
 			catch (e){

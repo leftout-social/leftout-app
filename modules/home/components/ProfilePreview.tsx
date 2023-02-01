@@ -40,20 +40,20 @@ const ProfilePreview = (userId: any) => {
 				className='profile-image'
 			/>
 			<Details>
-				<span>{userDetails.first_name + ' ' + userDetails.last_name}</span>
+				<span>{userDetails?.first_name + ' ' + userDetails?.last_name}</span>
 				<div className='sub-details'>
-					<span>{`${userDetails.current_age},`}</span>
-					<span>{`${userDetails.gender},`}</span>
-					<span>{userDetails.current_location}</span>
+					<span>{`${userDetails?.current_age},`}</span>
+					<span>{`${userDetails?.gender},`}</span>
+					<span>{userDetails?.current_location}</span>
 				</div>
-                   {userDetails.insta_id && 
+                   {userDetails?.insta_id && 
                     <span className='insta' onClick={onInstagramClick}><InstagramIcon
                     htmlColor={'#7e33ca'}
                 />
-                {userDetails.insta_id}</span>}
+                {userDetails?.insta_id}</span>}
         
 				{/* <span className='bio'>{userDetails.user_bio}</span> */}
-                <span className='bio'>{`daljdhgaudhaldjsajd  as;'djasoidjasoi udhjasio dhjasopdasdasd`}</span>
+                <span className='bio'>{userDetails?.user_bio}</span>
 			</Details>
 		</Parent>
 	);

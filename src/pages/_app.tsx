@@ -48,7 +48,9 @@ export default function App({ Component, pageProps }: AppProps) {
 			if (id && token) {
 				const response = await getUserDetail(id);
 				setInitialData({ ...initalData, userData: response.data });
-			} else if (router.pathname !== '/reset') await router.push('/login');
+			} else if (!['/reset', '/verify-email'].includes(router.pathname)) {
+				await router.push('/login');
+			}
 		} catch (e) {
 			console.error({ e });
 			await router.replace('/login');

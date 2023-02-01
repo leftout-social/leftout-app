@@ -18,7 +18,8 @@ interface ProfileComponentProps {
 	gender: string;
 	currentCity: string;
 	insta_id: string;
-    bio?:string;
+	bio?: string;
+	profile_image_url?: string;
 }
 
 const ProfileComponent = ({
@@ -28,13 +29,14 @@ const ProfileComponent = ({
 	gender,
 	currentCity,
 	insta_id,
-    bio
+	bio,
+	profile_image_url,
 }: ProfileComponentProps) => {
 	const router = useRouter();
 	const [tab, setTab] = useState<number>(1);
 	const inputFile = useRef<HTMLInputElement>(null);
 	const [feeds, setFeeds] = useState<any>([]);
-	const [profilePhoto, setProfilePhoto] = useState('/cardImage/beach-1.jpg');
+	const [profilePhoto, setProfilePhoto] = useState(profile_image_url);
 	const [instaId, setInstaId] = useState<string>('');
 	const [instaIdDrawer, setInstaIdDrawer] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -47,23 +49,39 @@ const ProfileComponent = ({
 		}
 	};
 
-    const imageKit = new ImageKit({
-        publicKey: 'public_pim8PZbmU7YcB5ph4pUaxRNixRU=',
-        privateKey: 'private_vVDfx9DE4P6LCFtOYx0cCwOUwDc=',
-        urlEndpoint: 'https://ik.imagekit.io/xqcsnvb2o/leftout'
-    });
+	const imageKit = new ImageKit({
+		publicKey: process.env.NEXT_APP_IMGKIT_publicKey as string,
+		privateKey: process.env.NEXT_APP_IMGKIT_privateKey as string,
+		urlEndpoint: process.env.NEXT_APP_IMGKIT_urlEndpoint as string
+	});
 
 	const uploadProfilePhoto = (event: any) => {
 		if (event.target.files[0]) {
 			setProfilePhoto(URL.createObjectURL(event.target.files[0]));
 		}
 
-        imageKit.upload({
-            file: event.target.files[0],
-            fileName: `${firstName}_${lastName}`
-        }, function(err, result) {
-            // console.log("arguments", arguments);
-        });
+		imageKit.upload(
+			{
+				file: event.target.files[0],
+				fileName: `${firstName}_${lastName}`,
+			},
+			async function (err, result) {
+				console.log(result);
+				const profile_image_url = result?.url
+				const userData = {
+					firstName,
+					lastName,
+					age,
+					gender,
+					currentCity,
+					instaId,
+					bio,
+					profile_image_url
+				};
+				console.log(userData);
+				await connectInstagramAccount(userData);
+			}
+		);
 	};
 	useEffect(() => {
 		(async () => await fetchFeeds())();
@@ -76,7 +94,17 @@ const ProfileComponent = ({
 	const connectInstaAccount = async () => {
 		setLoading(true);
 		try {
-			const data = await connectInstagramAccount(instaId);
+			const userData = {
+				firstName,
+				lastName,
+				age,
+				gender,
+				currentCity,
+				instaId,
+				bio,
+				profile_image_url
+			};
+			const data = await connectInstagramAccount(userData);
 			setInstaIdDrawer(false);
 			setLoading(false);
 			window.location.reload();
@@ -109,7 +137,7 @@ const ProfileComponent = ({
 					onChange={(event) => uploadProfilePhoto(event)}
 				/>
 				<img
-					src={profilePhoto}
+					src={profilePhoto || '/cardImage/beach-1.jpg'}
 					width={100}
 					height={100}
 					className='profile-image'
@@ -127,9 +155,7 @@ const ProfileComponent = ({
 						onClick={onInstagramClick}
 					/>
 				</div>
-                <span className='bio'>
-                    {bio}
-                </span>
+				<span className='bio'>{bio}</span>
 			</UserDetails>
 
 			<TabContainer>
@@ -242,11 +268,11 @@ const UserDetails = styled.div`
 		line-height: 150%;
 		color: #8f90a7;
 	}
-    .bio {
-        margin-top: 10px;
-        font-size: 14px;
-        padding: 0 8px;
-    }
+	.bio {
+		margin-top: 10px;
+		font-size: 14px;
+		padding: 0 8px;
+	}
 `;
 
 const TabContainer = styled.div`
@@ -281,7 +307,7 @@ const FeedContainer = styled.div`
 	flex-direction: column;
 	gap: 1rem;
 	height: 100%;
-    position: relative;
+	position: relative;
 	top: -30px;
 `;
 const DrawerParent = styled.div`
