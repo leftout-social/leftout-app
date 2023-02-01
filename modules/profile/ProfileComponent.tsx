@@ -10,6 +10,7 @@ import FeedCard from '../home/components/FeedCard';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import { BottomDrawer } from '~/components/BottomDrawer';
 import { Button, Loading, Input } from '@nextui-org/react';
+import ImageKit from 'imagekit';
 interface ProfileComponentProps {
 	firstName: string;
 	lastName: string;
@@ -17,6 +18,7 @@ interface ProfileComponentProps {
 	gender: string;
 	currentCity: string;
 	insta_id: string;
+    bio?:string;
 }
 
 const ProfileComponent = ({
@@ -26,6 +28,7 @@ const ProfileComponent = ({
 	gender,
 	currentCity,
 	insta_id,
+    bio
 }: ProfileComponentProps) => {
 	const router = useRouter();
 	const [tab, setTab] = useState<number>(1);
@@ -44,10 +47,23 @@ const ProfileComponent = ({
 		}
 	};
 
+    const imageKit = new ImageKit({
+        publicKey: 'public_pim8PZbmU7YcB5ph4pUaxRNixRU=',
+        privateKey: 'private_vVDfx9DE4P6LCFtOYx0cCwOUwDc=',
+        urlEndpoint: 'https://ik.imagekit.io/xqcsnvb2o/leftout'
+    });
+
 	const uploadProfilePhoto = (event: any) => {
 		if (event.target.files[0]) {
 			setProfilePhoto(URL.createObjectURL(event.target.files[0]));
 		}
+
+        imageKit.upload({
+            file: event.target.files[0],
+            fileName: `${firstName}_${lastName}`
+        }, function(err, result) {
+            // console.log("arguments", arguments);
+        });
 	};
 	useEffect(() => {
 		(async () => await fetchFeeds())();
@@ -105,12 +121,15 @@ const ProfileComponent = ({
 				<div className='sub-details'>
 					<span>{`${age},`}</span>
 					<span>{`${gender},`}</span>
-					<span>{`${currentCity},`}</span>
+					<span>{`${currentCity}`}</span>
 					<InstagramIcon
 						htmlColor={insta_id && '#7e33ca'}
 						onClick={onInstagramClick}
 					/>
 				</div>
+                <span className='bio'>
+                    {bio}
+                </span>
 			</UserDetails>
 
 			<TabContainer>
@@ -223,11 +242,15 @@ const UserDetails = styled.div`
 		line-height: 150%;
 		color: #8f90a7;
 	}
+    .bio {
+        margin-top: 10px;
+        font-size: 14px;
+        padding: 0 8px;
+    }
 `;
 
 const TabContainer = styled.div`
 	display: flex;
-	padding: 0 12px;
 	width: inherit;
 	margin-top: 20px;
 	position: relative;
@@ -258,6 +281,8 @@ const FeedContainer = styled.div`
 	flex-direction: column;
 	gap: 1rem;
 	height: 100%;
+    position: relative;
+	top: -30px;
 `;
 const DrawerParent = styled.div`
 	display: flex;

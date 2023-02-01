@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 import InitalDataContext from '~/context/initial-data-context';
 import { Loading } from '@nextui-org/react';
 import { BottomDrawer } from '~/components/BottomDrawer';
-import ProfileComponent from '~/modules/profile/ProfileComponent';
+import ProfilePreview from './ProfilePreview';
 export interface FeedCardProps {
 	profileImage: string;
 	first_name: string;
@@ -31,6 +31,7 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 	const {userData} = useContext(InitalDataContext);
 	const [interested, setInterested] = useState(false);
 	const [loading, setLoading] = useState<boolean>(false);
+    const [openProfileBottomDrawer, setOpenProfileBottomDrawer] = useState<boolean>(false);
 	const onInterestedClick = async() => {
 		setLoading(true);
 		console.log('triggered')
@@ -50,7 +51,7 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 	return (
 		<CardContainer onClick={props.onClick} self={props.self}>
 			{!props.self && <ProfileContainer position='top ' justifyContent='space-between'>
-				<div className='name-avatar'>
+				<div className='name-avatar' onClick={() => setOpenProfileBottomDrawer(true)}>
 					<img
 						src='/cardImage/beach-1.jpg'
 						width={30}
@@ -68,7 +69,7 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 						<span id='value'>{props.travelling_to_location}</span>
 					</div>
 					<div className='items'>
-						<span id='key'>Looking for peoples : </span>
+						<span id='key'>Looking for people : </span>
 						<span id='value'>#{props.required_travellers}</span>
 					</div>
 					<div className='items'>
@@ -106,6 +107,10 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 				</div>}
 				{!loading && interested && <span id='sent'>Your interest request has been sent!</span>}
 			</ProfileContainer>}
+
+            <BottomDrawer id='profile-preview' open={openProfileBottomDrawer} onClose={() => setOpenProfileBottomDrawer(false)}>
+                <ProfilePreview userId={props.user_id}/>
+            </BottomDrawer>
            
 		</CardContainer>
 	);

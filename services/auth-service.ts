@@ -99,9 +99,15 @@ export const getFeedDetails = async(id: any) => {
     return response.data;
 }
 
-export const connectInstagramAccount = async(instaId: any) => {
+export const connectInstagramAccount = async(userDetails: any) => {
     const response = await $axios.put(`${_apiBaseUrl}/profile`, {
-        insta_id: instaId
+        first_name: userDetails.firstName,
+        last_name: userDetails.lastName,
+        current_age: userDetails.age,
+        gender: userDetails.gender,
+        current_location: userDetails.currentCity,
+        insta_id: userDetails.insta_id,
+        user_bio: userDetails.bio
     })
     return response.data;
 }
