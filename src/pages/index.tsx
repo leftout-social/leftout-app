@@ -38,30 +38,36 @@ export default function Home() {
 			console.error(error);
 		}
 	};
+	const ItemLoading = () => (
+		<LoadingWrapper>
+			<Loading />
+		</LoadingWrapper>
+	);
 	useEffect(() => {
 		(async () => await fetchFeeds())();
 	}, []);
 	return (
 		<Parent>
-			<div className='scroll-container' id='scrollableDiv'>
-				{feeds.length === 0 && <Loading size='xl' />}
+			<div id='scrollableDiv'>
 				<InfiniteScroll
 					hasMore={hasMore}
-					loader={<Loading />}
+					loader={ItemLoading()}
 					scrollableTarget='scrollableDiv'
 					next={fetchFeeds}
 					dataLength={feeds.length}
 				>
-					{feeds &&
-						feeds
-							.filter((item: any) => item.user_id !== userData.id)
-							.map((item: any) => {
-								return (
-									<Fragment key={item.feed_id}>
-										<FeedCard {...item} self={false} />
-									</Fragment>
-								);
-							})}
+					<div className='scroll-container'>
+						{feeds &&
+							feeds
+								.filter((item: any) => item.user_id !== userData.id)
+								.map((item: any) => {
+									return (
+										<Fragment key={item.feed_id}>
+											<FeedCard {...item} self={false} />
+										</Fragment>
+									);
+								})}
+					</div>
 				</InfiniteScroll>
 			</div>
 		</Parent>
@@ -71,12 +77,14 @@ const Parent = styled.div`
 	height: 100%;
 	width: 100%;
 	background: #f6f7f9;
+	#scrollableDiv {
+		height: 100%;
+		overflow: auto;
+	}
 	.scroll-container {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
-		overflow: auto;
-		height: inherit;
 		@media (min-width: 700px) {
 			padding: 7rem 1rem 2rem 1rem;
 		}
@@ -104,6 +112,12 @@ const Parent = styled.div`
 		right: 5%;
 		z-index: 1000;
 	}
+`;
+
+const LoadingWrapper = styled.div`
+	display: flex;
+	justify-content: center;
+	overflow: auto;
 `;
 // const NavContainer = styled.div`
 //   width: inherit;

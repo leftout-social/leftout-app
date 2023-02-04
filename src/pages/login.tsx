@@ -30,20 +30,6 @@ export default Login;
 const Parent = styled.div`
 	height: 100%;
 	width: 100%;
-	//.title {
-	//  position: absolute;
-	//  top: 50%;
-	//  left: 50%;
-	//  transform: translate(-50%, -50%);
-	//  span {
-	//    @media (min-width: 500px) {
-	//      font-size: 200px;
-	//    }
-	//    @media (max-width: 499px){
-	//      font-size: 50px;
-	//    }
-	//  }
-	//}
 	.company-promotion {
 		display: flex;
 		justify-content: center;
@@ -63,7 +49,7 @@ const Parent = styled.div`
 const LoginImage = styled.div`
 	height: 320px;
 	width: 100%;
-	background: url('/images/cover-onboarding-1.jpg');
+	background: url('/leftout-cover-mobile.webp');
 	background-size: 100% 100%;
 	
 `;

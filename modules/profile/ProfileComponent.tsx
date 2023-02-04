@@ -9,7 +9,7 @@ import {
 import FeedCard from '../home/components/FeedCard';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import { BottomDrawer } from '~/components/BottomDrawer';
-import { Button, Loading, Input } from '@nextui-org/react';
+import { Button, Input, Loading } from '@nextui-org/react';
 import ImageKit from 'imagekit';
 interface ProfileComponentProps {
 	firstName: string;
@@ -20,6 +20,7 @@ interface ProfileComponentProps {
 	insta_id: string;
 	bio?: string;
 	profile_image_url?: string;
+	callback: () => void;
 }
 
 const ProfileComponent = ({
@@ -31,6 +32,7 @@ const ProfileComponent = ({
 	insta_id,
 	bio,
 	profile_image_url,
+	callback
 }: ProfileComponentProps) => {
 	const router = useRouter();
 	const [tab, setTab] = useState<number>(1);
@@ -48,11 +50,10 @@ const ProfileComponent = ({
 			console.error(err);
 		}
 	};
-
 	const imageKit = new ImageKit({
-		publicKey: process.env.NEXT_APP_IMGKIT_publicKey as string,
-		privateKey: process.env.NEXT_APP_IMGKIT_privateKey as string,
-		urlEndpoint: process.env.NEXT_APP_IMGKIT_urlEndpoint as string
+		publicKey: process.env.NEXT_PUBLIC_IMGKIT_publicKey as string,
+		privateKey: process.env.NEXT_PUBLIC_IMGKIT_privateKey as string,
+		urlEndpoint: process.env.NEXT_PUBLIC_IMGKIT_urlEndpoint as string
 	});
 
 	const uploadProfilePhoto = (event: any) => {
@@ -78,11 +79,12 @@ const ProfileComponent = ({
 					bio,
 					profile_image_url
 				};
-				console.log(userData);
 				await connectInstagramAccount(userData);
+				callback?.();
 			}
 		);
 	};
+	console.log('profile-image -> ', profile_image_url);
 	useEffect(() => {
 		(async () => await fetchFeeds())();
 	}, []);
@@ -104,10 +106,10 @@ const ProfileComponent = ({
 				bio,
 				profile_image_url
 			};
-			const data = await connectInstagramAccount(userData);
+			await connectInstagramAccount(userData);
 			setInstaIdDrawer(false);
 			setLoading(false);
-			window.location.reload();
+			callback?.();
 		} catch (error) {
 			console.error(error);
 			setLoading(false);

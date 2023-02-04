@@ -1,26 +1,26 @@
 import { Button } from '@mui/material';
-import { useContext, useState } from 'react';
+import {useState } from 'react';
 import styled from 'styled-components';
-import InitalDataContext from '~/context/initial-data-context';
 import CloseIcon from '@mui/icons-material/Close';
 import { Input, Dropdown } from '@nextui-org/react';
 import { Textarea } from '@nextui-org/react';
 import { connectInstagramAccount } from '~/services/auth-service';
 
 interface EditProfileProps {
+	userData: any;
+	callback: () => void;
 	closeDrawer: () => void;
 }
 
-const EditProfile = ({ closeDrawer }: EditProfileProps) => {
-	const { userData } = useContext(InitalDataContext);
+const EditProfile = ({ userData, callback, closeDrawer }: EditProfileProps) => {
 	const [userDetails, setUserDetails] = useState({
-		currentCity: userData.current_location,
+		currentCity: userData?.current_location,
 		gender: userData?.gender,
-		firstName: userData.first_name,
+		firstName: userData?.first_name,
 		lastName: userData?.last_name,
 		age: userData?.current_age,
-		insta_id: userData?.insta_id,
-        bio: userData?.user_bio,
+		instaId: userData?.insta_id,
+        bio: userData?.user_bio || '',
 	});
 
 	const genderTypes = ['Male', 'Female', 'Others', 'All'];
@@ -34,8 +34,8 @@ const EditProfile = ({ closeDrawer }: EditProfileProps) => {
 
 	const handleOnSave = async () => {
 		try {
-			const resposne = await connectInstagramAccount(userDetails);
-			closeDrawer();
+			await connectInstagramAccount(userDetails);
+			callback?.();
 		} catch (err) {
 			console.error(err);
 		}
@@ -125,11 +125,11 @@ const EditProfile = ({ closeDrawer }: EditProfileProps) => {
 			/>
 
 			<Input
-				value={userDetails.insta_id}
+				value={userDetails.instaId}
 				clearable
 				status='secondary'
 				onChange={(event) =>
-					setUserDetails({ ...userDetails, insta_id: event.target.value })
+					setUserDetails({ ...userDetails, instaId: event.target.value })
 				}
 				label='Insta Id'
 				css={{

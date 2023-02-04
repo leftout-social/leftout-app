@@ -50,13 +50,13 @@ const TopNavbar = ({openNewPostDrawer}: TopNavbar) => {
 			title: 'Notifications',
 			path: '/notification',
 		},
-		// {
-		//     id: 5,
-		//     inActiveIcon: '/nav/inactive-profile.svg',
-		//     activeIcon: '/nav/active-profile.svg',
-		//     title: 'Profile',
-		//     path: '/profile',
-		// },
+		{
+		    id: 5,
+		    inActiveIcon: '/nav/inactive-profile.svg',
+		    activeIcon: '/nav/active-profile.svg',
+		    title: 'Profile',
+		    path: '/profile',
+		},
 	];
 	const onTabChange = async (tab: number, path?: string) => {
 		if (tab !== 3) {
@@ -86,17 +86,14 @@ const TopNavbar = ({openNewPostDrawer}: TopNavbar) => {
 	}, [path]);
 	return (
 		<SideNavContainer>
-			<ProfileContainer onClick={() => onTabChange(5, '/profile')}>
+			<ProfileContainer onClick={() => onTabChange(1)}>
 				<img
-					src='/cardImage/beach-1.jpg'
-					height='50'
-					width='50'
+					src='nav/nav-logo.svg'
+					height='70'
+					width='100'
 					alt='profile-img'
 					id='profile-img'
 				/>
-				<span id='name'>
-					{userData.first_name} {userData.last_name}
-				</span>
 			</ProfileContainer>
             <MenuContainer>
 			{tabs.map(({ id, inActiveIcon, activeIcon, title, path }) => {

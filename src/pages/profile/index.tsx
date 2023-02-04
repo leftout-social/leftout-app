@@ -2,25 +2,45 @@ import styled from 'styled-components';
 import Toolbar from '~/components/Toolbar';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ProfileComponent from '~/modules/profile/ProfileComponent';
-import {useContext, useState} from 'react';
+import {useContext, useState, useEffect} from 'react';
 import InitalDataContext from '~/context/initial-data-context';
 import Cookies from "js-cookie";
 import {BottomDrawer} from "~/components/BottomDrawer";
-import {Button} from "@nextui-org/react";
+import {Button, Loading} from "@nextui-org/react";
 import EditProfile from '~/modules/profile/EditProfile';
+import { getUserDetail } from '~/services/auth-service';
+import CircularLoader from '~/components/CircularLoader';
 
 const Profile = () => {
     const [logout, setLogout] = useState<boolean>(false);
     const [openEditBottomDrawer, setOpenEditBottomDrawer] = useState<boolean>(false);
+    const [userDetails, setUserDetails] = useState<any>();
+    const [loading, setLoading] = useState<boolean>(false);
     const {userData} = useContext(InitalDataContext);
     const onLogoutClick = async () => {
         setLogout(true);
     };
+    const fetchUserData = async() => {
+        try {
+            setLoading(true);
+            const data = await getUserDetail(userData.id);
+            setUserDetails(data['data']);
+            setLoading(false);
+            setOpenEditBottomDrawer(false);
+        }
+        catch(e){
+            setLoading(false);
+            console.error(e);
+        }
+    }
     const confirmLogout = async () => {
         await localStorage.clear();
         await Cookies.remove('leftout-login');
         window.location.href = '/login';
     }
+    useEffect(() => {
+        (async() => await fetchUserData())();
+    }, [])
 
     return (
         <Parent>
@@ -32,15 +52,18 @@ const Profile = () => {
                 />
             </div>
             <div className='scroll-container'>
-                <ProfileComponent
-                    currentCity={userData?.current_location}
-                    gender={userData?.gender}
-                    firstName={userData?.first_name}
-                    lastName={userData?.last_name}
-                    age={userData?.current_age}
-                    insta_id={userData?.insta_id}
-                    bio={userData?.user_bio}
-                />
+                {loading && <CircularLoader />}
+                {!loading && <ProfileComponent
+                    currentCity={userDetails?.current_location}
+                    gender={userDetails?.gender}
+                    firstName={userDetails?.first_name}
+                    lastName={userDetails?.last_name}
+                    age={userDetails?.current_age}
+                    insta_id={userDetails?.insta_id}
+                    bio={userDetails?.user_bio}
+                    profile_image_url={userDetails?.profile_image_url}
+                    callback={fetchUserData}
+                />}
             </div>
                 <BottomDrawer id='logout' open={logout}>
                     <DrawerParent>
@@ -49,7 +72,7 @@ const Profile = () => {
                     </DrawerParent>
                 </BottomDrawer>
                 <BottomDrawer id='profile-preview' open={openEditBottomDrawer} onClose={() => setOpenEditBottomDrawer(false)}>
-                    <EditProfile closeDrawer={() => setOpenEditBottomDrawer(false)}/>
+                    <EditProfile callback={fetchUserData} userData={userDetails} closeDrawer={() => setOpenEditBottomDrawer(false)}/>
                 </BottomDrawer>
         </Parent>
     );
