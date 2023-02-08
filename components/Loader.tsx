@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 interface LoaderProps {
-	height: string | number;
-	width: string | number;
+	height?: string | number;
+	width?: string | number;
 }
 
 const Loader = ({ height, width }: LoaderProps) => {
@@ -10,8 +10,8 @@ const Loader = ({ height, width }: LoaderProps) => {
 		<Parent>
 			<img
 				src='/images/loader.gif'
-				height={height}
-				width={width}
+				height={height || 100}
+				width={width || 100}
 				alt='Loader'
 			/>
 		</Parent>

@@ -30,7 +30,7 @@ const BottomNavbar = ({openNewPostDrawer, position}:BottomTabsProps) => {
             inActiveIcon: '/nav/mypost-inactive.svg',
             activeIcon: '/nav/mypost-active.svg',
             title: 'Home',
-            path: '/',
+            path: '/explore',
         },
         {
             id: 3,
