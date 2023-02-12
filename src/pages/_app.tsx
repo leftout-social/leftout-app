@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app';
 import '../styles/globals.css';
-import { useEffect, useState } from 'react';
+import {useEffect, useLayoutEffect, useState} from 'react';
 import Toast, { ToastDefaultValue, ToastItem } from '~/components/Toast';
 import InitalDataContext, { GlobalData } from '~/context/initial-data-context';
 import { useRouter } from 'next/router';
@@ -8,12 +8,12 @@ import useDeviceWidth from '~/hooks/use-device-width';
 import { getUserDetail } from '~/services/auth-service';
 import Loading from '~/components/Loading';
 import styled from 'styled-components';
-import Cookies from 'js-cookie';
 import { requestInterceptor, responseInterceptor } from '~/config/axios';
 import BottomNavbar from '~/modules/nav/components/BottomNavbar';
 import TopNavbar from '~/modules/nav/components/SideNavbar';
 import { BottomDrawer } from '~/components/BottomDrawer';
 import CreatePost from '~/modules/home/components/CreatePost';
+import SearchContainer from "~/modules/home/components/SearchContainer";
 
 export default function App({ Component, pageProps }: AppProps) {
 	// @ts-ignore
@@ -90,7 +90,7 @@ export default function App({ Component, pageProps }: AppProps) {
 			setIsMobile(false);
 		}
 	}, []);
-	useEffect(() => {
+	useLayoutEffect(() => {
 		requestInterceptor();
 		responseInterceptor(toastHandler);
 	}, []);

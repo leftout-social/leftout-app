@@ -5,27 +5,27 @@ import { Loading } from '@nextui-org/react';
 import FeedCard from '~/modules/home/components/FeedCard';
 import InitalDataContext from '~/context/initial-data-context';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import SearchContainer from "~/modules/home/components/SearchContainer";
+import {useRouter} from "next/router";
 
 export default function Home() {
+	const {push} = useRouter();
 	const [feeds, setFeeds] = useState<any>([]);
 	const [userLocation, setUserLocation] = useState<any>({});
 	const { userData } = useContext(InitalDataContext);
+	const [searchQuery, setSearchQuery] = useState<string>('');
 	const pageNo = useRef<number>(1);
 	const [hasMore, setHasMore] = useState<boolean>(true);
-	const successCallback = (position: any) => {
-		setUserLocation(position);
-	};
-	const errorCallback = (error: any) => {
-		setUserLocation({});
-	};
-	useEffect(() => {
-		navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-	}, []);
-	const fetchFeeds = async () => {
+	const [distance, setDistance] = useState<{id: number, value: number, text: string}>({
+		id: 4,
+		value: 1000,
+		text: '1000+ KM'
+	})
+	const fetchFeeds = async (lat = userLocation?.coords?.latitude, long = userLocation?.coords?.longitude) => {
 		try {
 			const data = await getAllFeeds(
-				userLocation?.coords?.latitude || 20,
-				userLocation?.coords?.longitude || 70,
+				lat || 20 ,
+				long || 70,
 				pageNo.current
 			);
 			if (data.data.length === 0) {
@@ -38,16 +38,41 @@ export default function Home() {
 			console.error(error);
 		}
 	};
+	const successCallback = async(position: any) => {
+		setUserLocation(position);
+		const lat = position?.coords?.latitude;
+		const long = position?.coords?.longitude;
+		await fetchFeeds(lat, long)
+	};
+	const errorCallback = async(error: any) => {
+		setUserLocation({});
+		await fetchFeeds()
+	};
+	const onChange = (val: string) => {
+		setSearchQuery(val);
+	}
+	const filteredData = feeds?.filter((item: any) =>
+		Object.values(item).join('').toLowerCase().includes(searchQuery.toLowerCase())
+	)
+	const renderData = (filteredData?.length >= 1 ? filteredData : feeds)
+	const onDistanceChange = (data: {id: number, value: number, text: string}) => {
+		setDistance(data)
+		console.log(data);
+	}
+	useEffect(() => {
+		push({ query: {search: searchQuery } }, undefined, { shallow: true });
+	}, [searchQuery])
+	useEffect(() => {
+		navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+	}, []);
 	const ItemLoading = () => (
 		<LoadingWrapper>
 			<Loading />
 		</LoadingWrapper>
 	);
-	useEffect(() => {
-		(async () => await fetchFeeds())();
-	}, []);
 	return (
 		<Parent>
+			<SearchContainer searchQuery={searchQuery} onChange={onChange} selectedMenu={distance.id} onMenuChange={onDistanceChange}/>
 			<div id='scrollableDiv'>
 				<InfiniteScroll
 					hasMore={hasMore}
@@ -58,8 +83,10 @@ export default function Home() {
 				>
 					<div className='scroll-container'>
 						{feeds &&
-							feeds
-								.filter((item: any) => item.user_id !== userData.id)
+							renderData
+								.filter((item: any) =>
+									item.user_id !== userData.id
+								)
 								.map((item: any) => {
 									return (
 										<Fragment key={item.feed_id}>
@@ -77,6 +104,7 @@ const Parent = styled.div`
 	height: 100%;
 	width: 100%;
 	background: #f6f7f9;
+	position: relative;
 	#scrollableDiv {
 		height: 100%;
 		overflow: auto;
@@ -86,7 +114,7 @@ const Parent = styled.div`
 		flex-direction: column;
 		gap: 1rem;
 		@media (min-width: 700px) {
-			padding: 7rem 1rem 2rem 1rem;
+			padding: 10rem 1rem 2rem 1rem;
 		}
 		@media (max-width: 700px) {
 			padding: 2rem 1rem 7rem 1rem;
