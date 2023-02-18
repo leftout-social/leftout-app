@@ -6,6 +6,7 @@ import InitalDataContext from '~/context/initial-data-context';
 import { Loading } from '@nextui-org/react';
 import { BottomDrawer } from '~/components/BottomDrawer';
 import ProfilePreview from './ProfilePreview';
+import {updateWalletBalance} from "~/services/wallet-service";
 export interface FeedCardProps {
 	profileImage: string;
 	first_name: string;
@@ -37,6 +38,7 @@ const FeedCard = ({ ...props }: FeedCardProps) => {
 		console.log('triggered')
 		try {
 			await reactOnFeed(props.feed_id, userData.id, props.user_id);
+			await updateWalletBalance('DEBIT', 50)
 			setInterested(true);
 			setLoading(false);
 		}

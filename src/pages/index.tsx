@@ -7,6 +7,7 @@ import InitalDataContext from '~/context/initial-data-context';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import SearchContainer from "~/modules/home/components/SearchContainer";
 import {useRouter} from "next/router";
+import Image from "next/image";
 
 export default function Home() {
 	const {push} = useRouter();
@@ -32,8 +33,12 @@ export default function Home() {
 				setHasMore(false);
 				return;
 			}
-			setFeeds([...feeds, ...data.data]);
+			const transformData = data['data'].filter((item: any) =>
+				item.user_id !== userData.id
+			)
+			setFeeds([...feeds, ...transformData]);
 			pageNo.current += 1;
+			setHasMore(false)
 		} catch (error) {
 			console.error(error);
 		}
@@ -57,7 +62,6 @@ export default function Home() {
 	const renderData = (filteredData?.length >= 1 ? filteredData : feeds)
 	const onDistanceChange = (data: {id: number, value: number, text: string}) => {
 		setDistance(data)
-		console.log(data);
 	}
 	useEffect(() => {
 		push({ query: {search: searchQuery } }, undefined, { shallow: true });
@@ -65,7 +69,7 @@ export default function Home() {
 	useEffect(() => {
 		navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 	}, []);
-	const ItemLoading = () => (
+	const ItemLoading =  (
 		<LoadingWrapper>
 			<Loading />
 		</LoadingWrapper>
@@ -76,17 +80,18 @@ export default function Home() {
 			<div id='scrollableDiv'>
 				<InfiniteScroll
 					hasMore={hasMore}
-					loader={ItemLoading()}
+					loader={ItemLoading}
 					scrollableTarget='scrollableDiv'
 					next={fetchFeeds}
 					dataLength={feeds.length}
 				>
 					<div className='scroll-container'>
+						{hasMore && renderData.length === 0 && <EmptyState>
+							<span>No trip yet : (</span>
+							<Image src='/images/no-feed.svg' alt='emtpy-state' height={300} width={200} />
+						</EmptyState>}
 						{feeds &&
 							renderData
-								.filter((item: any) =>
-									item.user_id !== userData.id
-								)
 								.map((item: any) => {
 									return (
 										<Fragment key={item.feed_id}>
@@ -105,9 +110,15 @@ const Parent = styled.div`
 	width: 100%;
 	background: #f6f7f9;
 	position: relative;
+	overflow: hidden;
 	#scrollableDiv {
 		height: 100%;
 		overflow: auto;
+		//below css is to hide scrollbar
+		//::-webkit-scrollbar {
+		//	width: 0px;
+		//	background: transparent; /* make scrollbar transparent */
+		//}
 	}
 	.scroll-container {
 		display: flex;
@@ -117,7 +128,7 @@ const Parent = styled.div`
 			padding: 10rem 1rem 2rem 1rem;
 		}
 		@media (max-width: 700px) {
-			padding: 2rem 1rem 7rem 1rem;
+			padding: 2rem 1rem 12rem 1rem;
 		}
 
 		background: #f6f7f9;
@@ -154,3 +165,18 @@ const LoadingWrapper = styled.div`
 //   bottom: 0;
 //   z-index: 3;
 // `;
+
+const EmptyState = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+	span {
+		color: #7e33ca;
+		font-weight: bold;
+		font-size: 30px;
+	}
+`;
