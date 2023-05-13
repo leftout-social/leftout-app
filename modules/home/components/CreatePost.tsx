@@ -74,8 +74,8 @@ const CreatePost = ({ closeDrawer, latitude, longitude }: createPostProps) => {
 			/>
 
 			<div className='date-container'>
-				<DateRangePicker type='from' />
-				<DateRangePicker type='to' />
+				<DateRangePicker type='from' value={formState.fromDate} onChange={(val) => setFormState({...formState, fromDate: val})}/>
+				<DateRangePicker type='to'value={formState.toDate} onChange={(val) => setFormState({...formState, toDate: val})} />
 			</div>
 
 			<Input

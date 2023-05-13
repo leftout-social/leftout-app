@@ -48,7 +48,7 @@ export const resetPassword = async(data: any) => {
 }
 
 export const getAllFeeds = async(lat: any, long: any, pageNo: any = 1, pageSize: any = 20) => {
-    const response = await $axios.get(`${_apiBaseUrl}/feed?pageNo=${pageNo}&pageSize=${pageSize}`, {
+    const response = await $axios.get(`${_apiBaseUrl}/feed?pageNo=${pageNo}&pageSize=${pageSize}&lat=${lat}&long=${long}`, {
         headers: {
             lat: lat,
             long: long

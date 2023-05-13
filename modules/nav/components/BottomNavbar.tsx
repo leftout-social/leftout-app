@@ -64,7 +64,8 @@ const BottomNavbar = ({openNewPostDrawer, position}:BottomTabsProps) => {
         let list = {
             '/profile': 5,
             '/': 1,
-            '/notification': 4
+            '/notification': 4,
+            '/explore': 2
         }
         //@ts-ignore
         return list[path];

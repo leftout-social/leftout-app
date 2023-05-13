@@ -1,5 +1,5 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -8,10 +8,12 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
 interface DateRangeProps {
     type: string;
+    value: Dayjs | string;
+    onChange: (val: string)  => void;
+
 }
 
-export default function DateRangePicker({type}: DateRangeProps) {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+export default function DateRangePicker({type, value, onChange}: DateRangeProps) {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -20,7 +22,7 @@ export default function DateRangePicker({type}: DateRangeProps) {
           label={type}
           value={value}
           onChange={(newValue: any) => {
-            setValue(newValue);
+              onChange(newValue);
           }}
           renderInput={(params: any) => <TextField {...params} />}
         />
