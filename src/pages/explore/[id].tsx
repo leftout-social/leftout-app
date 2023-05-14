@@ -55,55 +55,57 @@ const LocationDetails = () => {
 	}, []);
 
 	return (
-		<>
-			{articleData && (
-				<Parent>
-					<div className='fixed-header'>
-						<Toolbar
-							onLeftButtonClick={() => router.back()}
-							leftButtonJSX={<KeyboardBackspaceIcon htmlColor='#7e33ca' />}
-						/>
-					</div>
+		<Parent>
+			<div className='fixed-header'>
+				<Toolbar
+					onLeftButtonClick={() => router.back()}
+					leftButtonJSX={<KeyboardBackspaceIcon htmlColor='#7e33ca' />}
+				/>
+			</div>
+			<div className='details'>
+				<span className='title'>{articleData.title}</span>
+				<ImageContainer
+					index={imageIndex}
+					articleData={articleData}
+					onTouchStart={onTouchStart}
+					onTouchMove={onTouchMove}
+					onTouchEnd={onTouchEnd}
+				>
+					{loading && (
+						<div className='loader'>
+							<CircularLoader screenHeight='100%' screenWidth='100%' />
+						</div>
+					)}
+					<img
+						src={articleData.images && articleData.images[imageIndex]}
+						alt='image'
+						className='image'
+					/>
+				</ImageContainer>
 
-					<span className='title'>{articleData.title}</span>
-					<ImageContainer
-						index={imageIndex}
-						articleData={articleData}
-						onTouchStart={onTouchStart}
-						onTouchMove={onTouchMove}
-						onTouchEnd={onTouchEnd}
-					>
-						{loading && <CircularLoader />}
-						<img
-							src={articleData.images && articleData.images[imageIndex]}
-							alt='image'
-							className='image'
-						/>
-					</ImageContainer>
-					<span>{articleData.desc}</span>
-					<DetailContainer>
-						<span className='heading'>Places to Visit</span>
-						<div className='bullet-points'>
-							<ul>
-								{articleData.places_to_visit?.map((item: string) => (
-									<li>{item}</li>
-								))}
-							</ul>
-						</div>
-					</DetailContainer>
-					<DetailContainer>
-						<span className='heading'>Best time to visit</span>
-						<div className='bullet-points'>
-							<ul>
-								{articleData.best_time_to_visit?.map((item: string) => (
-									<li dangerouslySetInnerHTML={{ __html: item }} />
-								))}
-							</ul>
-						</div>
-					</DetailContainer>
-				</Parent>
-			)}
-		</>
+				<span>{articleData.desc}</span>
+				<DetailContainer>
+					<span className='heading'>Places to Visit</span>
+					<div className='bullet-points'>
+						<ul>
+							{articleData.places_to_visit?.map((item: string) => (
+								<li>{item}</li>
+							))}
+						</ul>
+					</div>
+				</DetailContainer>
+				<DetailContainer>
+					<span className='heading'>Best time to visit</span>
+					<div className='bullet-points'>
+						<ul>
+							{articleData.best_time_to_visit?.map((item: string) => (
+								<li dangerouslySetInnerHTML={{ __html: item }} />
+							))}
+						</ul>
+					</div>
+				</DetailContainer>
+			</div>
+		</Parent>
 	);
 };
 
@@ -111,24 +113,39 @@ export default LocationDetails;
 
 const Parent = styled.div`
 	position: relative;
-  height: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	padding: 20px;
+	height: 100%;
+	width: 100%;
+	padding: 15px;
 	gap: 20px;
 	color: #7e33ca;
-	overflow: auto;
+	overflow: hidden;
 
 	.fixed-header {
 		position: fixed;
 		width: 100%;
 		max-width: 850px;
-		margin: 0 auto;
 		top: 0;
-		padding: 0 0.7rem;
+		margin-left: -15px;
+		z-index: 100;
 	}
 
+	.loader {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.details {
+		position: relative;
+		height: 100%;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+		padding-bottom: 70px;
+		overflow-y: auto;
+	}
 	.title {
 		font-size: 22px;
 		font-weight: 700;
