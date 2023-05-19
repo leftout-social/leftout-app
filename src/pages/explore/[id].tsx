@@ -1,94 +1,155 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Loader from '~/components/Loader';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import StarIcon from '@mui/icons-material/Star';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import Toolbar from '~/components/Toolbar';
+import CircularLoader from '~/components/CircularLoader';
 
 const LocationDetails = () => {
 	const router = useRouter();
 	const { id } = router.query;
 	const [articleData, setArticleData] = useState<any>({});
-	const imageIndex = useRef<number>(0);
+	const [imageIndex, setImageIndex] = useState<number>(0);
+	const [touchStart, setTouchStart] = useState(null);
+	const [touchEnd, setTouchEnd] = useState(null);
+	const [loading, setLoading] = useState(false);
+
+	const minSwipeDistance = 80;
+
+	const onTouchStart = (e: any) => {
+		setTouchEnd(null);
+		setTouchStart(e.targetTouches[0].clientX);
+	};
+
+	const onTouchMove = (e: any) => setTouchEnd(e.targetTouches[0].clientX);
+
+	const onTouchEnd = () => {
+		if (!touchStart || !touchEnd) return;
+		const distance = touchStart - touchEnd;
+		const isLeftSwipe = distance > minSwipeDistance;
+		const isRightSwipe = distance < -minSwipeDistance;
+		if (isLeftSwipe) handleImageChange('prev');
+		else if (isRightSwipe) handleImageChange('next');
+	};
 
 	const handleImageChange = (type: string) => {
 		if (type === 'next') {
-			imageIndex.current = (imageIndex.current + 1) % articleData.images.length;
+			setImageIndex((imageIndex + 1) % articleData.images.length);
 		} else {
-			imageIndex.current =
-				(imageIndex.current - 1 + articleData.images.length) %
-				articleData.images.length;
+			setImageIndex(
+				(imageIndex - 1 + articleData.images.length) % articleData.images.length
+			);
 		}
-
-		console.log('change', imageIndex.current);
 	};
 
-	// console.log("images", articleData?.images);
-	// console.log("ref", imageIndex);
-
 	useEffect(() => {
+		setLoading(true);
 		(async () => {
 			const response: any = await axios.get(
 				`https://api.jsonbin.io/v3/b/${id}?meta=false`
 			);
 			setArticleData(response.data);
-			console.log(response.data);
+			setLoading(false);
 		})();
 	}, []);
 
 	return (
-		<>
-			{articleData && (
-				<Parent>
-					<span className='title'>{articleData.title}</span>
-					<ImageContainer index={imageIndex.current} articleData={articleData}>
-						<ChevronLeftIcon onClick={() => handleImageChange('prev')} />
-						<img src={articleData.images && articleData.images[Number(imageIndex)]} alt='image' className='image' />
-						<ChevronRightIcon onClick={() => handleImageChange('next')} />
-					</ImageContainer>
-					<span>{articleData.desc}</span>
-					<DetailContainer>
-						<span className='heading'>Places to Visit</span>
-						<div className='bullet-points'>
+		<Parent>
+			<div className='fixed-header'>
+				<Toolbar
+					onLeftButtonClick={() => router.back()}
+					leftButtonJSX={<KeyboardBackspaceIcon htmlColor='#7e33ca' />}
+				/>
+			</div>
+			<div className='details'>
+				<span className='title'>{articleData.title}</span>
+				<ImageContainer
+					index={imageIndex}
+					articleData={articleData}
+					onTouchStart={onTouchStart}
+					onTouchMove={onTouchMove}
+					onTouchEnd={onTouchEnd}
+				>
+					{loading && (
+						<div className='loader'>
+							<CircularLoader screenHeight='100%' screenWidth='100%' />
+						</div>
+					)}
+					<img
+						src={articleData.images && articleData.images[imageIndex]}
+						alt='image'
+						className='image'
+					/>
+				</ImageContainer>
+
+				<span>{articleData.desc}</span>
+				<DetailContainer>
+					<span className='heading'>Places to Visit</span>
+					<div className='bullet-points'>
+						<ul>
 							{articleData.places_to_visit?.map((item: string) => (
-								<span>
-									<StarIcon /> {item}
-								</span>
+								<li>{item}</li>
 							))}
-						</div>
-					</DetailContainer>
-                    <DetailContainer>
-						<span className='heading'>Famous for</span>
-						<div className='bullet-points'>
-							{articleData.famous_for?.map((item: string) => (
-								<span>
-									<StarIcon /> {item}
-								</span>
+						</ul>
+					</div>
+				</DetailContainer>
+				<DetailContainer>
+					<span className='heading'>Best time to visit</span>
+					<div className='bullet-points'>
+						<ul>
+							{articleData.best_time_to_visit?.map((item: string) => (
+								<li dangerouslySetInnerHTML={{ __html: item }} />
 							))}
-						</div>
-					</DetailContainer>
-				</Parent>
-			)}
-		</>
+						</ul>
+					</div>
+				</DetailContainer>
+			</div>
+		</Parent>
 	);
 };
 
 export default LocationDetails;
 
 const Parent = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	padding: 10px;
-	gap: 15px;
-	.title {
-		font-size: 20px;
-		font-weight: 700;
-		color: #7e33ca;
+	position: relative;
+	height: 100%;
+	width: 100%;
+	padding: 15px;
+	gap: 20px;
+	color: #7e33ca;
+	overflow: hidden;
+
+	.fixed-header {
+		position: fixed;
+		width: 100%;
+		max-width: 850px;
+		top: 0;
+		margin-left: -15px;
+		z-index: 100;
 	}
-	
+
+	.loader {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.details {
+		position: relative;
+		height: 100%;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+		padding-bottom: 70px;
+		overflow-y: auto;
+	}
+	.title {
+		font-size: 22px;
+		font-weight: 700;
+	}
 `;
 
 const ImageContainer = styled.div<{
@@ -97,26 +158,31 @@ const ImageContainer = styled.div<{
 }>`
 	display: flex;
 	width: 100%;
-	padding: 5px;
 	height: 170px;
 	align-items: center;
 	justify-content: space-between;
 	border-radius: 6px;
 	.image {
-		width: 100%;
+		width: 100vw;
 		height: 170px;
 		border-radius: 4px;
+		object-fit: cover;
 	}
 `;
 
 const DetailContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-    align-items: flex-start;
+	width: 100%;
 
-    .bullet-points {
+	.heading {
+		font-weight: 600;
+		font-size: 18px;
+	}
+
+	.bullet-points {
 		display: flex;
 		flex-direction: column;
-		align-items: flex-start;
+		margin-left: -10px;
 	}
 `;
